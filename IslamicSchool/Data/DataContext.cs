@@ -37,6 +37,10 @@ namespace IslamicSchool.Data
                 .WithOne(u => u.Role)
                 .HasForeignKey(u => u.RoleId)
                 .IsRequired();
+                builder.Entity<Branch>()
+                .HasOne(b => b.AppUser)
+                .WithOne(au => au.Branch)
+                .HasForeignKey<AppUser>(au => au.BranchId);
         }
     }
 }

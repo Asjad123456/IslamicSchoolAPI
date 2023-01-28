@@ -11,7 +11,9 @@ namespace IslamicSchool.Helpers
         {
             CreateMap<UserForRegistrationDto, AppUser>()
                 .ReverseMap();
-            CreateMap<Branch, BranchDto>().ReverseMap();
+            CreateMap<Branch, BranchDto>()
+                .ForMember(dest => dest.BranchAdminId, opt => opt.MapFrom(src => src.AppUserId))
+                .ReverseMap();
             CreateMap<Student, StudentForUpdateDto>().ReverseMap();
             CreateMap<Guardian, GuardianDto>().ReverseMap();
             CreateMap<TeacherDto, Teacher>()

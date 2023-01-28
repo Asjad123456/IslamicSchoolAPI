@@ -112,7 +112,9 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId");
+                    b.HasIndex("BranchId")
+                        .IsUnique()
+                        .HasFilter("[BranchId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -152,8 +154,8 @@ namespace IslamicSchool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("BranchAdminId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("BranchCode")
                         .HasColumnType("int");
@@ -168,9 +170,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchAdminId");
-
-                    b.ToTable("Branches", (string)null);
+                    b.ToTable("Branches");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.BranchAdmin", b =>
@@ -201,7 +201,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BranchAdmins", (string)null);
+                    b.ToTable("BranchAdmins");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Course", b =>
@@ -218,7 +218,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Courses", (string)null);
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Guardian", b =>
@@ -249,7 +249,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Guardians", (string)null);
+                    b.ToTable("Guardians");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Question", b =>
@@ -266,7 +266,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("Questions", (string)null);
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
@@ -303,7 +303,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasIndex("GuardianId");
 
-                    b.ToTable("Students", (string)null);
+                    b.ToTable("Students");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
@@ -328,7 +328,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("StudyClasses", (string)null);
+                    b.ToTable("StudyClasses");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Teacher", b =>
@@ -364,7 +364,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasIndex("BranchId");
 
-                    b.ToTable("Teachers", (string)null);
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.TeacherTask", b =>
@@ -381,7 +381,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TeacherTasks", (string)null);
+                    b.ToTable("TeacherTasks");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -475,8 +475,8 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.Branch", "Branch")
-                        .WithMany()
-                        .HasForeignKey("BranchId");
+                        .WithOne("AppUser")
+                        .HasForeignKey("IslamicSchool.Entities.AppUser", "BranchId");
 
                     b.Navigation("Branch");
                 });
@@ -498,17 +498,6 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
-                {
-                    b.HasOne("IslamicSchool.Entities.BranchAdmin", "BranchAdmin")
-                        .WithMany()
-                        .HasForeignKey("BranchAdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BranchAdmin");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
@@ -586,6 +575,12 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
+                {
+                    b.Navigation("AppUser")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

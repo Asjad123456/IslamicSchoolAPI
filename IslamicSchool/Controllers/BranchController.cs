@@ -36,8 +36,9 @@ namespace IslamicSchool.Controllers
             return Ok(branch);
         }
         [HttpPost]
-        public async Task<IActionResult> AddBranch(Branch branch)
+        public async Task<IActionResult> AddBranch(BranchDto branchdto)
         {
+            var branch = mapper.Map<Branch>(branchdto);
             uow.BranchRepository.AddBranch(branch);
             await uow.SaveAsync();
             return Ok();
