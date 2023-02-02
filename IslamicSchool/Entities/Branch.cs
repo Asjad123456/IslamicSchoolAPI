@@ -9,5 +9,8 @@
         public int BranchCode { get; set; }
         public Guid AppUserId { get; set; }
         public AppUser AppUser { get; set; }
+        public ICollection<AppUser> AppUsers { get; set; }
+        public ICollection<StudyClass> studyClasses { get; set;}
+        public ICollection<Student> Students { get; set; }
     }
 }

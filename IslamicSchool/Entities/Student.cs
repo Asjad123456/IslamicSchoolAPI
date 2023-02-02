@@ -11,5 +11,7 @@
         public int RollNumber { get; set; }
         public int? GuardianId { get; set;  }
         public Guardian? Guardian { get; set; }
+        public int BranchId { get; set; }
+        public Branch Branch  { get; set; }
     }
 }
