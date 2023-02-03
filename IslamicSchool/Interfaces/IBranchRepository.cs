@@ -1,4 +1,5 @@
 ﻿using IslamicSchool.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IslamicSchool.Interfaces
 {

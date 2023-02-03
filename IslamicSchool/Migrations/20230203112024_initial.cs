@@ -49,8 +49,7 @@ namespace IslamicSchool.Migrations
                     BranchName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BranchCode = table.Column<int>(type: "int", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    BranchCode = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -202,11 +201,18 @@ namespace IslamicSchool.Migrations
                     ContactNumber = table.Column<int>(type: "int", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RollNumber = table.Column<int>(type: "int", nullable: false),
-                    GuardianId = table.Column<int>(type: "int", nullable: true)
+                    GuardianId = table.Column<int>(type: "int", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Students", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Students_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Students_Guardians_GuardianId",
                         column: x => x.GuardianId,
@@ -307,7 +313,8 @@ namespace IslamicSchool.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClassTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    BranchId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -316,6 +323,12 @@ namespace IslamicSchool.Migrations
                         name: "FK_StudyClasses_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudyClasses_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -355,9 +368,7 @@ namespace IslamicSchool.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_BranchId",
                 table: "AspNetUsers",
-                column: "BranchId",
-                unique: true,
-                filter: "[BranchId] IS NOT NULL");
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -365,6 +376,11 @@ namespace IslamicSchool.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Students_BranchId",
+                table: "Students",
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_GuardianId",
@@ -375,6 +391,11 @@ namespace IslamicSchool.Migrations
                 name: "IX_StudyClasses_AppUserId",
                 table: "StudyClasses",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudyClasses_BranchId",
+                table: "StudyClasses",
+                column: "BranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Teachers_BranchId",

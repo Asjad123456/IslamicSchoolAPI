@@ -30,7 +30,11 @@ namespace IslamicSchool.Repository
 
         public async Task<IEnumerable<Branch>> GetBranchesAsync()
         {
-            return await context.Branches.ToListAsync();
+            return await context.Branches
+                .Include(b => b.AppUsers)
+                .Include(b => b.studyClasses)
+                .Include(b => b.Students)
+                .ToListAsync();
         }
     }
 }

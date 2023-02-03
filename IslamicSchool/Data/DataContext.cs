@@ -37,14 +37,22 @@ namespace IslamicSchool.Data
                 .WithOne(u => u.Role)
                 .HasForeignKey(u => u.RoleId)
                 .IsRequired();
-           builder.Entity<Branch>()
+/*           builder.Entity<Branch>()
                 .HasOne(b => b.AppUser)
                 .WithOne(au => au.Branch)
-                .HasForeignKey<AppUser>(au => au.BranchId);
-/*            builder.Entity<Branch>()
+                .HasForeignKey<AppUser>(au => au.BranchId);*/
+            builder.Entity<Branch>()
+                .HasMany(b => b.studyClasses)
+                .WithOne(t => t.Branch)
+                .HasForeignKey(t => t.BranchId);
+            builder.Entity<Branch>()
+                .HasMany(b => b.Students)
+                .WithOne(s => s.Branch)
+                .HasForeignKey(s => s.BranchId);
+            builder.Entity<Branch>()
                 .HasMany(b => b.AppUsers)
                 .WithOne(b => b.Branch)
-                .has*/
+                .HasForeignKey(s => s.BranchId);
         }
     }
 }

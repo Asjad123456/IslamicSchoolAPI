@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230128101355_initial")]
+    [Migration("20230203112024_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -114,9 +114,7 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BranchId")
-                        .IsUnique()
-                        .HasFilter("[BranchId] IS NOT NULL");
+                    b.HasIndex("BranchId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -155,9 +153,6 @@ namespace IslamicSchool.Migrations
                     b.Property<string>("Address")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("BranchCode")
                         .HasColumnType("int");
@@ -282,6 +277,9 @@ namespace IslamicSchool.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("ContactNumber")
                         .HasColumnType("int");
 
@@ -303,6 +301,8 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("GuardianId");
 
                     b.ToTable("Students");
@@ -319,6 +319,9 @@ namespace IslamicSchool.Migrations
                     b.Property<Guid>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<int>("BranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("ClassName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -329,6 +332,8 @@ namespace IslamicSchool.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId");
+
+                    b.HasIndex("BranchId");
 
                     b.ToTable("StudyClasses");
                 });
@@ -477,8 +482,8 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.Branch", "Branch")
-                        .WithOne("AppUser")
-                        .HasForeignKey("IslamicSchool.Entities.AppUser", "BranchId");
+                        .WithMany("AppUsers")
+                        .HasForeignKey("BranchId");
 
                     b.Navigation("Branch");
                 });
@@ -504,9 +509,17 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
                 {
+                    b.HasOne("IslamicSchool.Entities.Branch", "Branch")
+                        .WithMany("Students")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("IslamicSchool.Entities.Guardian", "Guardian")
                         .WithMany()
                         .HasForeignKey("GuardianId");
+
+                    b.Navigation("Branch");
 
                     b.Navigation("Guardian");
                 });
@@ -519,7 +532,15 @@ namespace IslamicSchool.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("IslamicSchool.Entities.Branch", "Branch")
+                        .WithMany("studyClasses")
+                        .HasForeignKey("BranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
+
+                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Teacher", b =>
@@ -581,8 +602,11 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
                 {
-                    b.Navigation("AppUser")
-                        .IsRequired();
+                    b.Navigation("AppUsers");
+
+                    b.Navigation("Students");
+
+                    b.Navigation("studyClasses");
                 });
 #pragma warning restore 612, 618
         }
