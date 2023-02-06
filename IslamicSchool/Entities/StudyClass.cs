@@ -9,7 +9,7 @@
         public AppUser? AppUser { get; set; }
         public int BranchId { get; set; }
         public Branch Branch { get; set; }
-/*        public int CourseId { get; set; }
-        public Course Course { get; set; }*/
+        /*        public int CourseId { get; set; }
+                public Course Course { get; set; }*/
     }
 }

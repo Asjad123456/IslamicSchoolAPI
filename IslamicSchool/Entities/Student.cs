@@ -12,6 +12,6 @@
         public int? GuardianId { get; set;  }
         public Guardian? Guardian { get; set; }
         public int BranchId { get; set; }
-        public Branch Branch  { get; set; }
+        public Branch Branch { get; set; }
     }
 }

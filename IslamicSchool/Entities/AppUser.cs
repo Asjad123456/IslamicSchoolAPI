@@ -10,6 +10,5 @@ namespace IslamicSchool.Entities
         public int? BranchId { get; set; } 
         public Branch? Branch { get; set; }
         public ICollection<AppUserRole> UserRoles { get; set; }
-        public ICollection<BranchesXappUser> branchesXappUsers{ get; set; }
    }
 }

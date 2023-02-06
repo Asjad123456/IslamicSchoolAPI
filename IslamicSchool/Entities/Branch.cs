@@ -10,8 +10,7 @@
 /*        public Guid AppUserId { get; set; }
         public AppUser AppUser { get; set; }*/
         public ICollection<AppUser> AppUsers { get; set; }
-        public ICollection<StudyClass> studyClasses { get; set;}
+        public ICollection<StudyClass> studyClasses { get; set; }
         public ICollection<Student> Students { get; set; }
-        public ICollection<BranchesXappUser> branchesXappUsers { get; set; }
     }
 }
