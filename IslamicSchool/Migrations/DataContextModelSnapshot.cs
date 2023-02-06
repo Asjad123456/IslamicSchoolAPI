@@ -152,6 +152,9 @@ namespace IslamicSchool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<int>("BranchCode")
                         .HasColumnType("int");
 
@@ -164,6 +167,9 @@ namespace IslamicSchool.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.ToTable("Branches");
                 });
@@ -479,11 +485,9 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
-                    b.HasOne("IslamicSchool.Entities.Branch", "Branch")
+                    b.HasOne("IslamicSchool.Entities.Branch", null)
                         .WithMany("AppUsers")
                         .HasForeignKey("BranchId");
-
-                    b.Navigation("Branch");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.AppUserRole", b =>
@@ -503,6 +507,17 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
+                        .WithOne("Branch")
+                        .HasForeignKey("IslamicSchool.Entities.Branch", "AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
@@ -595,6 +610,8 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
+                    b.Navigation("Branch");
+
                     b.Navigation("UserRoles");
                 });
 

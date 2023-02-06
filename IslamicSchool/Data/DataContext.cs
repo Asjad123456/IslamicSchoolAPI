@@ -22,23 +22,9 @@ namespace IslamicSchool.Data
         public DbSet<BranchAdmin> BranchAdmins { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<TeacherTask> TeacherTasks { get; set; }
-        public DbSet<BranchesXappUser> branchesXappUsers { get; set; } 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            builder.Entity<BranchesXappUser>()
-                .HasKey(x => new { x.BranchId, x.AppUserId});
-
-            builder.Entity<BranchesXappUser>()
-                 .HasOne(x => x.AppUser)
-                 .WithMany(x => x.branchesXappUsers)
-                 .HasForeignKey(x => x.AppUserId);
-
-            builder.Entity<BranchesXappUser>()
-                .HasOne(x => x.Branch)
-                .WithMany(x => x.branchesXappUsers)
-                .HasForeignKey(x => x.BranchId);
 
             builder.Entity<AppUser>()
                 .HasMany(ur => ur.UserRoles)
@@ -51,6 +37,10 @@ namespace IslamicSchool.Data
                 .HasForeignKey(u => u.RoleId)
                 .IsRequired();
             builder.Entity<Branch>()
+                .HasOne(b => b.AppUser)
+                .WithOne(au => au.Branch)
+                .HasForeignKey<Branch>(b => b.AppUserId);
+            builder.Entity<Branch>()
                 .HasMany(b => b.studyClasses)
                 .WithOne(t => t.Branch)
                 .HasForeignKey(t => t.BranchId);
@@ -58,10 +48,10 @@ namespace IslamicSchool.Data
                 .HasMany(b => b.Students)
                 .WithOne(s => s.Branch)
                 .HasForeignKey(s => s.BranchId);
-            builder.Entity<Branch>()
+/*            builder.Entity<Branch>()
                 .HasMany(b => b.AppUsers)
                 .WithOne(b => b.Branch)
-                .HasForeignKey(s => s.BranchId);
+                .HasForeignKey(s => s.BranchId);*/
         }
     }
 }
