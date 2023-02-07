@@ -12,7 +12,16 @@ namespace IslamicSchool.Helpers
             CreateMap<UserForRegistrationDto, AppUser>()
                 .ReverseMap();
             CreateMap<Branch, BranchDto>()
-                .ForMember(dest => dest.BranchAdminId, opt => opt.MapFrom(src => src.AppUsers.FirstOrDefault().Id))
+                .ForMember(dest => dest.BranchAdminId, opt => opt.MapFrom(src => src.AppUserId))
+                /*.ForMember(dest => dest.BranchAdmin, opt => opt.MapFrom(src => src.AppUser))*/
+                .ReverseMap();
+            CreateMap<Branch, GetBranchDto>()
+                .ForMember(dest => dest.BranchAdminId, opt => opt.MapFrom(src => src.AppUserId))
+                /*.ForMember(dest => dest.BranchAdmin, opt => opt.MapFrom(src => src.AppUser))*/
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.AppUser.UserName))
+                .ForMember(dest => dest.FatherName, opt => opt.MapFrom(src => src.AppUser.FatherName))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.AppUser.Email))
+                .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.AppUser.PhoneNumber))
                 .ReverseMap();
             CreateMap<Student, StudentForUpdateDto>().ReverseMap();
             CreateMap<Guardian, GuardianDto>().ReverseMap();

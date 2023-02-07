@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IslamicSchool.DataTransferObjects;
+using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,26 +20,29 @@ namespace IslamicSchool.Controllers
         [HttpGet]
         public async Task<IActionResult> GetALlBranches()
         {
+            
             var branches = await uow.BranchRepository.GetBranchesAsync();
-            return Ok(branches);
-        }
-        [HttpGet("types")]
-        public async Task<IActionResult> GetBranchType()
-        {
-            var BranchTypes = await uow.BranchRepository.GetBranchesAsync();
-            var BranchTypeDto = mapper.Map<IEnumerable<KeyValueDto>>(BranchTypes);
-            return Ok(BranchTypeDto);
+            var branch = mapper.Map<IEnumerable<GetBranchDto>>(branches);
+            return Ok(branch);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBranchById(int id)
         {
             var branch = await uow.BranchRepository.FindBranch(id);
-            return Ok(branch);
+            var branchdata = mapper.Map<IEnumerable<GetBranchDto>>(branch);
+            return Ok(branchdata);
         }
         [HttpPost]
         public async Task<IActionResult> AddBranch(BranchDto branchdto)
         {
             var branch = mapper.Map<Branch>(branchdto);
+            uow.BranchRepository.AddBranch(branch);
+            await uow.SaveAsync();
+            return Ok();
+        }
+        [HttpPost("Test")]
+        public async Task<IActionResult> TestAdd(Branch branch)
+        {
             uow.BranchRepository.AddBranch(branch);
             await uow.SaveAsync();
             return Ok();

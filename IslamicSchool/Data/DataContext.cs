@@ -46,9 +46,9 @@ namespace IslamicSchool.Data
                  .WithOne(au => au.Branch)
                  .HasForeignKey<AppUser>(au => au.BranchId);*/
             builder.Entity<Branch>()
-                  .HasMany(b => b.AppUsers)
-                  .WithOne(s => s.Branch)
-                  .HasForeignKey(s => s.BranchId);
+                .HasOne(b => b.AppUser)
+                .WithOne(au => au.Branch)
+                .HasForeignKey<Branch>(b => b.AppUserId);
             builder.Entity<Branch>()
                 .HasMany(b => b.studyClasses)
                 .WithOne(t => t.Branch)
@@ -57,7 +57,6 @@ namespace IslamicSchool.Data
                 .HasMany(b => b.Students)
                 .WithOne(s => s.Branch)
                 .HasForeignKey(s => s.BranchId);
-
         }
     }
 }
