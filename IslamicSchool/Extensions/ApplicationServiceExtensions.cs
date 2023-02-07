@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using IslamicSchool.Data;
+using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Helpers;
 using IslamicSchool.Interfaces;
@@ -28,6 +29,7 @@ namespace IslamicSchool.Extensions
             var configMap = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new MapingProfile());
+                cfg.CreateMap<Branch, GetBranchDto>();
             });
             var mapper = configMap.CreateMapper();
             services.AddSingleton(mapper);

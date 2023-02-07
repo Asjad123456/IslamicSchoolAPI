@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using IslamicSchool.Data;
 using IslamicSchool.DataTransferObjects;
+using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IslamicSchool.Controllers
 {
@@ -11,11 +14,13 @@ namespace IslamicSchool.Controllers
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
+        private readonly DataContext context;
 
-        public BranchController(IUnitOfWork uow, IMapper mapper)
+        public BranchController(IUnitOfWork uow, IMapper mapper, DataContext context)
         { 
             this.uow = uow;
             this.mapper = mapper;
+            this.context = context;
         }
         [HttpGet]
         public async Task<IActionResult> GetALlBranches()
@@ -28,9 +33,12 @@ namespace IslamicSchool.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBranchById(int id)
         {
-            var branch = await uow.BranchRepository.FindBranch(id);
-            var branchdata = mapper.Map<IEnumerable<GetBranchDto>>(branch);
-            return Ok(branchdata);
+            var branches = await context.Branches.Include(b => b.AppUser)
+                                                   .Include(b => b.studyClasses)
+                                                   .Where(x => x.Id == id)
+                                                   .ToListAsync();
+            var branchDtos = mapper.Map<List<GetBranchDto>>(branches);
+            return Ok(branchDtos);
         }
         [HttpPost]
         public async Task<IActionResult> AddBranch(BranchDto branchdto)
@@ -55,7 +63,7 @@ namespace IslamicSchool.Controllers
             return Ok(id);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBranch(int id, BranchDto branchDto)
+        public async Task<IActionResult> UpdateBranch(int id, EditBranchDto branchDto)
         {
             var branch = await uow.BranchRepository.FindBranch(id);
 
