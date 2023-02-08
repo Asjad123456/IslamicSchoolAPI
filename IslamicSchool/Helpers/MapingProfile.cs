@@ -37,6 +37,16 @@ namespace IslamicSchool.Helpers
                    .ForMember(dto => dto.AppUserId, opt => opt.MapFrom(src => src.AppUserId))
                    .ForMember(dto => dto.BranchId, opt => opt.MapFrom(src => src.BranchId))
                 .ReverseMap();
+            CreateMap<StudyClass, EditClassDto>()
+                 .ReverseMap();
+            CreateMap<Student, GetStudentDto>()
+                .ForMember(dto => dto.GuardianId, opt => opt.MapFrom(src => src.GuardianId))
+                .ForMember(dto => dto.GuardianName, opt => opt.MapFrom(src => src.Guardian.Name))
+                .ForMember(dto => dto.GuardianFatherName, opt => opt.MapFrom(src => src.Guardian.FatherName))
+                .ForMember(dto => dto.GuardianContactNumber, opt => opt.MapFrom(src => src.Guardian.ContactNumber))
+                .ForMember(dto => dto.GuardianAddress, opt => opt.MapFrom(src => src.Guardian.Address))
+                .ForMember(dto => dto.CNIC, opt => opt.MapFrom(src => src.Guardian.CNIC))
+                .ReverseMap();
             CreateMap<Student, StudentForUpdateDto>().ReverseMap();
             CreateMap<Guardian, GuardianDto>().ReverseMap();
             CreateMap<TeacherDto, Teacher>()

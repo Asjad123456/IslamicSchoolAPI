@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using IslamicSchool.Data;
 using IslamicSchool.DataTransferObjects;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
 using IslamicSchool.UOW;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace IslamicSchool.Controllers
 {
@@ -14,17 +16,19 @@ namespace IslamicSchool.Controllers
     {
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
+        private readonly DataContext context;
 
-        public StudentController(IUnitOfWork uow, IMapper mapper)
+        public StudentController(IUnitOfWork uow, IMapper mapper, DataContext context)
         {
             this.uow = uow;
             this.mapper = mapper;
+            this.context = context;
         }
         [HttpGet]
         public async Task<IActionResult> GetStudents()
         {
             var students = await uow.StudentRepository.GetStudentsAsync();
-            var studentdto = mapper.Map<IEnumerable<StudentDto>>(students);
+            var studentdto = mapper.Map<IEnumerable<GetStudentDto>>(students);
             return Ok(studentdto);
         }
         [HttpGet("number")]
@@ -36,8 +40,11 @@ namespace IslamicSchool.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudentsById(int id)
         {
-            var student = await uow.StudentRepository.FindStudent(id);
-            return Ok(student);
+            var students = await context.Students.Include(b => b.Guardian)
+                                                   .Where(x => x.id == id)
+                                                   .ToListAsync();
+            var studentDtos = mapper.Map<List<GetStudentDto>>(students);
+            return Ok(studentDtos);
         }
         [HttpPost]
         public async Task<IActionResult> AddStudent(AddStudentDto studentDto)

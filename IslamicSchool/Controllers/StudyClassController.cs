@@ -2,6 +2,7 @@
 using IslamicSchool.Data;
 using IslamicSchool.DataTransferObjects;
 using IslamicSchool.DataTransferObjects.AddDtos;
+using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
@@ -54,7 +55,7 @@ namespace IslamicSchool.Controllers
             return Ok(id);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, StudyClassDto studyClassDto)
+        public async Task<IActionResult> UpdateStudent(int id, EditClassDto studyClassDto)
         {
             var studyclass = await uow.StudyClassRepository.FindStudyClass(id);
 
