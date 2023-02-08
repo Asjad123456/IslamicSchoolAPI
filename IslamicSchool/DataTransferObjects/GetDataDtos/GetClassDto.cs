@@ -1,8 +1,8 @@
 ﻿using IslamicSchool.Entities;
 
-namespace IslamicSchool.DataTransferObjects
+namespace IslamicSchool.DataTransferObjects.GetDataDtos
 {
-    public class StudyClassDto
+    public class GetClassDto
     {
         public int Id { get; set; }
         public string ClassName { get; set; }

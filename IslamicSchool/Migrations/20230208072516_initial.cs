@@ -253,37 +253,6 @@ namespace IslamicSchool.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
-                columns: table => new
-                {
-                    id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RegNumber = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ContactNumber = table.Column<int>(type: "int", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RollNumber = table.Column<int>(type: "int", nullable: false),
-                    GuardianId = table.Column<int>(type: "int", nullable: true),
-                    BranchId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Students", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Students_Branches_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Students_Guardians_GuardianId",
-                        column: x => x.GuardianId,
-                        principalTable: "Guardians",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "StudyClasses",
                 columns: table => new
                 {
@@ -333,6 +302,44 @@ namespace IslamicSchool.Migrations
                         principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RegNumber = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FatherName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ContactNumber = table.Column<int>(type: "int", nullable: true),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RollNumber = table.Column<int>(type: "int", nullable: false),
+                    GuardianId = table.Column<int>(type: "int", nullable: true),
+                    BranchId = table.Column<int>(type: "int", nullable: false),
+                    StudyClassId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Students", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Students_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Students_Guardians_GuardianId",
+                        column: x => x.GuardianId,
+                        principalTable: "Guardians",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Students_StudyClasses_StudyClassId",
+                        column: x => x.StudyClassId,
+                        principalTable: "StudyClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.NoAction);
                 });
 
             migrationBuilder.CreateIndex(
@@ -391,6 +398,11 @@ namespace IslamicSchool.Migrations
                 column: "GuardianId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Students_StudyClassId",
+                table: "Students",
+                column: "StudyClassId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_StudyClasses_AppUserId",
                 table: "StudyClasses",
                 column: "AppUserId");
@@ -436,9 +448,6 @@ namespace IslamicSchool.Migrations
                 name: "Students");
 
             migrationBuilder.DropTable(
-                name: "StudyClasses");
-
-            migrationBuilder.DropTable(
                 name: "Teachers");
 
             migrationBuilder.DropTable(
@@ -449,6 +458,9 @@ namespace IslamicSchool.Migrations
 
             migrationBuilder.DropTable(
                 name: "Guardians");
+
+            migrationBuilder.DropTable(
+                name: "StudyClasses");
 
             migrationBuilder.DropTable(
                 name: "Branches");

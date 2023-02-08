@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using IslamicSchool.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace IslamicSchool.DataTransferObjects.GetDataDtos
 {
@@ -14,5 +15,6 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public int RollNumber { get; set; }
         public int BranchId { get; set; }
         public int? GuardianId { get; set; }
+        public int StudyClassId { get; set; }
     }
 }

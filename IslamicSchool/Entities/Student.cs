@@ -13,5 +13,7 @@
         public Guardian? Guardian { get; set; }
         public int BranchId { get; set; }
         public Branch Branch { get; set; }
+        public int StudyClassId { get; set; }
+        public StudyClass StudyClass { get; set; }
     }
 }

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230206173210_initial")]
+    [Migration("20230208072516_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -303,11 +303,16 @@ namespace IslamicSchool.Migrations
                     b.Property<int>("RollNumber")
                         .HasColumnType("int");
 
+                    b.Property<int>("StudyClassId")
+                        .HasColumnType("int");
+
                     b.HasKey("id");
 
                     b.HasIndex("BranchId");
 
                     b.HasIndex("GuardianId");
+
+                    b.HasIndex("StudyClassId");
 
                     b.ToTable("Students");
                 });
@@ -525,9 +530,17 @@ namespace IslamicSchool.Migrations
                         .WithMany()
                         .HasForeignKey("GuardianId");
 
+                    b.HasOne("IslamicSchool.Entities.StudyClass", "StudyClass")
+                        .WithMany("Students")
+                        .HasForeignKey("StudyClassId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Branch");
 
                     b.Navigation("Guardian");
+
+                    b.Navigation("StudyClass");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
@@ -613,6 +626,11 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Students");
 
                     b.Navigation("studyClasses");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
+                {
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }
