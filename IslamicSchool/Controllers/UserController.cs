@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using IslamicSchool.DataTransferObjects.EditDtos;
+using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Extensions;
 using IslamicSchool.Helpers;
@@ -6,6 +8,7 @@ using IslamicSchool.Interfaces;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 
 namespace IslamicSchool.Controllers
@@ -30,10 +33,21 @@ namespace IslamicSchool.Controllers
             return Ok(users);
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(string id)
+        public async Task<IActionResult> GetUser(Guid id)
         {
-            var user = await userManager.FindByIdAsync(id);
+            var user = await userManager.Users.Include(b => b.Branch)
+                                              .Where(x => x.Id == id)
+                                              .ToListAsync();
             return Ok(user);
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AddBranchForUser(Guid id, AddBranchForSupervisorDto addBranchForSupervisorDto)
+        {
+            var user = await userManager.Users.Where(x => x.Id == id)
+                                                    .FirstAsync();
+            user.BranchId = addBranchForSupervisorDto.BranchId;
+            var result = await userManager.UpdateAsync(user);
+            return Ok(result);
         }
         [HttpGet("teachers")]
         public async Task<IActionResult> GetTeachers()
