@@ -239,7 +239,7 @@ namespace IslamicSchool.Migrations
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     BranchCode = table.Column<int>(type: "int", nullable: false),
-                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,8 +248,7 @@ namespace IslamicSchool.Migrations
                         name: "FK_Branches_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -338,8 +337,7 @@ namespace IslamicSchool.Migrations
                         name: "FK_Students_StudyClasses_StudyClassId",
                         column: x => x.StudyClassId,
                         principalTable: "StudyClasses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.NoAction);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -385,7 +383,8 @@ namespace IslamicSchool.Migrations
                 name: "IX_Branches_AppUserId",
                 table: "Branches",
                 column: "AppUserId",
-                unique: true);
+                unique: true,
+                filter: "[AppUserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_BranchId",

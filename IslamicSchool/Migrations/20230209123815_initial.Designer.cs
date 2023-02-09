@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230209121609_initial")]
+    [Migration("20230209123815_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -152,7 +152,7 @@ namespace IslamicSchool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("AppUserId")
+                    b.Property<Guid?>("AppUserId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("BranchCode")
@@ -169,7 +169,8 @@ namespace IslamicSchool.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AppUserId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[AppUserId] IS NOT NULL");
 
                     b.ToTable("Branches");
                 });
@@ -511,9 +512,7 @@ namespace IslamicSchool.Migrations
                 {
                     b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
                         .WithOne("Branch")
-                        .HasForeignKey("IslamicSchool.Entities.Branch", "AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IslamicSchool.Entities.Branch", "AppUserId");
 
                     b.Navigation("AppUser");
                 });
