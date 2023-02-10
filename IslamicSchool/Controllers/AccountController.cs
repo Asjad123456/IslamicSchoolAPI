@@ -56,6 +56,7 @@ namespace IslamicSchool.Controllers
         {
             var user = await userManager.Users
                 .SingleOrDefaultAsync(x => x.UserName == userForAuthenticationDto.UserName.ToLower());
+            var returnuser = await userManager.Users.ToListAsync();
 /*            var roles = userManager.GetRolesAsync(user);
 */
             if (user == null) return Unauthorized("UserName not Found");
@@ -64,7 +65,7 @@ namespace IslamicSchool.Controllers
 
             if (!result.Succeeded) return Unauthorized();
 
-            return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = await CreateToken(user), Roles = await ReturnRoles(user) });
+            return Ok(new AuthResponseDto { IsAuthSuccessful = true, Token = await CreateToken(user), Roles = await ReturnRoles(user), AppUser = user});
         }
         private async Task<IList<string>> ReturnRoles(AppUser user)
         {
