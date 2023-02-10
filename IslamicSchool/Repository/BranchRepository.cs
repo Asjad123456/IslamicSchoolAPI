@@ -27,7 +27,7 @@ namespace IslamicSchool.Repository
         public async Task<IActionResult> GetBranchByIdAsync(int id)
         {
             var branch = await context.Branches
-                .Include(b => b.AppUser)
+                /*.Include(b => b.AppUser)*/
                 .FirstOrDefaultAsync(b => b.Id == id);
             return new OkObjectResult(branch);
         }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IslamicSchool.DataTransferObjects;
 using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
@@ -37,6 +38,15 @@ namespace IslamicSchool.Controllers
         {
             var user = await userManager.Users.Include(b => b.Branch)
                                               .Where(x => x.Id == id)
+                                              .Select(x => new AppUserDto
+                                              {
+                                                  id = x.Id,
+                                                  UserName = x.UserName,
+                                                  Email = x.Email,
+                                                  BranchId = x.Branch.Id,
+                                                  BranchName = x.Branch.BranchName,
+                                                  Address = x.Branch.Address,
+                                              })
                                               .ToListAsync();
             return Ok(user);
         }

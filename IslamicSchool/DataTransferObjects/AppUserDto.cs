@@ -4,10 +4,13 @@ namespace IslamicSchool.DataTransferObjects
 {
     public class AppUserDto
     {
-        public int id { get; set; }
+        public Guid id { get; set; }
         public string UserName { get; set; }
         public string? FatherName { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
+        public int PhoneNumber { get; set; }
         public int BranchId { get; set; }
-        public Branch Branch { get; set; }
+        public string BranchName { get; set; }
     }
 }
