@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using IslamicSchool.Data;
 using IslamicSchool.DataTransferObjects;
 using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
@@ -19,12 +20,14 @@ namespace IslamicSchool.Controllers
         private readonly Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager;
         private readonly IMapper mapper;
         private readonly IUnitOfWork uow;
+        private readonly DataContext context;
 
-        public UserController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork uow)
+        public UserController(Microsoft.AspNetCore.Identity.UserManager<AppUser> userManager, IMapper mapper, IUnitOfWork uow, DataContext context)
         {
             this.userManager = userManager;
             this.mapper = mapper;
             this.uow = uow;
+            this.context = context;
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers([FromQuery]UserParams userParams)
@@ -69,7 +72,27 @@ namespace IslamicSchool.Controllers
         public async Task<IActionResult> GetAdmins()
         {
             var teachers = await userManager.GetUsersInRoleAsync("ADMIN");
-            return Ok(teachers);
+            var filteredTeachers = teachers.Where(t => t.BranchId == null && t.Branch == null);
+            List<AppUser> result = new List<AppUser>();
+            foreach (var teacher in filteredTeachers)
+            {
+                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUserId == teacher.Id);
+                if (relatedBranch == null)
+                {
+                    result.Add(teacher);
+                }
+            }
+            return Ok(result);
+        }
+        [HttpGet("supervisors")]
+        public async Task<IActionResult> GetSupervisors()
+        {
+            var teachers = await userManager.GetUsersInRoleAsync("ADMIN");
+            var filteredTeachers = userManager.Users
+                                           .Include(t => t.Branch)
+                                           .Where(t => t.UserRoles.Any(r => r.Role.Name == "ADMIN"))
+                                           .ToList();
+            return Ok(filteredTeachers);
         }
         [HttpGet("teachers-count")]
         public IActionResult GetTeachersCount()

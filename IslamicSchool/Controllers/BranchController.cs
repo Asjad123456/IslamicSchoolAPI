@@ -5,6 +5,7 @@ using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +16,14 @@ namespace IslamicSchool.Controllers
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
         private readonly DataContext context;
+        private readonly UserManager<AppUser> userManager;
 
-        public BranchController(IUnitOfWork uow, IMapper mapper, DataContext context)
+        public BranchController(IUnitOfWork uow, IMapper mapper, DataContext context, UserManager<AppUser> userManager)
         { 
             this.uow = uow;
             this.mapper = mapper;
             this.context = context;
+            this.userManager = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> GetALlBranches()
@@ -45,6 +48,10 @@ namespace IslamicSchool.Controllers
         {
             var branch = mapper.Map<Branch>(branchdto);
             uow.BranchRepository.AddBranch(branch);
+            var appUser = await userManager.FindByIdAsync(branchdto.AppUserId.ToString());
+            appUser.BranchId = branch.Id;
+            appUser.Branch = branch;
+            await userManager.UpdateAsync(appUser);
             await uow.SaveAsync();
             return Ok();
         }
