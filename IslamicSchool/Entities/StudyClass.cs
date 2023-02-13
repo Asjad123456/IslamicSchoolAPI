@@ -1,4 +1,4 @@
-﻿namespace IslamicSchool.Entities
+﻿     namespace IslamicSchool.Entities
 {
     public class StudyClass
     {

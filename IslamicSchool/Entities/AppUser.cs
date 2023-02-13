@@ -9,6 +9,7 @@ namespace IslamicSchool.Entities
         public string? FatherName { get; set; }
         public int? BranchId { get; set; } 
         public Branch? Branch { get; set; }
+        public ICollection<StudyClass> StudyClasses { get; set; }
         public ICollection<AppUserRole> UserRoles { get; set; }
    }
 }

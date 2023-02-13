@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230209141631_initial")]
+    [Migration("20230213154045_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -545,7 +545,7 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("StudyClasses")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -616,6 +616,8 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.Navigation("Branch");
+
+                    b.Navigation("StudyClasses");
 
                     b.Navigation("UserRoles");
                 });

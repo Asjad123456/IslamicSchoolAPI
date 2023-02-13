@@ -94,7 +94,18 @@ namespace IslamicSchool.Controllers
         public async Task<IActionResult> GetTeachers()
         {
             var teachers = await userManager.GetUsersInRoleAsync("TEACHER");
-            return Ok(teachers);
+            var filteredTeachers = teachers.Where(t => t.StudyClasses == null);
+            List<AppUser> result = new List<AppUser>();
+
+            foreach (var teacher in filteredTeachers)
+            {
+                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUserId == teacher.Id);
+                if (relatedBranch == null)
+                {
+                    result.Add(teacher);
+                }
+            }
+            return Ok(result);
         }
         [HttpGet("admins")]
         public async Task<IActionResult> GetAdmins()

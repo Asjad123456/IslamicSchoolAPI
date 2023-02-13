@@ -543,7 +543,7 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
-                        .WithMany()
+                        .WithMany("StudyClasses")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -614,6 +614,8 @@ namespace IslamicSchool.Migrations
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.Navigation("Branch");
+
+                    b.Navigation("StudyClasses");
 
                     b.Navigation("UserRoles");
                 });
