@@ -55,6 +55,7 @@ namespace IslamicSchool.Controllers
         public async Task<ActionResult> Login(UserForAuthenticationDto userForAuthenticationDto)
         {
             var user = await userManager.Users
+                .Include(u => u.Branch)
                 .SingleOrDefaultAsync(x => x.UserName == userForAuthenticationDto.UserName.ToLower());
             var returnuser = await userManager.Users.ToListAsync();
 /*            var roles = userManager.GetRolesAsync(user);
@@ -71,7 +72,7 @@ namespace IslamicSchool.Controllers
         {
             var roles = await userManager.GetRolesAsync(user);
             string roleString = string.Join(", ", roles);
-            return new List<string> { roleString };
+            return new List<string> { roleString }; 
         }
         private async Task<string> CreateToken(AppUser user)
         {

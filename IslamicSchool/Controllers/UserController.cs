@@ -45,6 +45,8 @@ namespace IslamicSchool.Controllers
                                               {
                                                   id = x.Id,
                                                   UserName = x.UserName,
+                                                  FatherName = x.FatherName,
+                                                  PhoneNumber = x.PhoneNumber,
                                                   Email = x.Email,
                                                   BranchId = x.Branch.Id,
                                                   BranchName = x.Branch.BranchName,
@@ -61,6 +63,32 @@ namespace IslamicSchool.Controllers
             user.BranchId = addBranchForSupervisorDto.BranchId;
             var result = await userManager.UpdateAsync(user);
             return Ok(result);
+        }
+        [HttpPut("profile/{id}")]
+        public async Task<IActionResult> EditProfile(Guid id, SupervisorProfileEditDto supervisorProfileEditDto)
+        {
+            var user = await userManager.Users.Where(x => x.Id == id)
+                                                    .FirstAsync();
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.UserName = supervisorProfileEditDto.userName;
+            user.FatherName = supervisorProfileEditDto.fatherName;
+            user.Email = supervisorProfileEditDto.email;
+            user.PhoneNumber = supervisorProfileEditDto.phoneNumber;
+
+            var result = await userManager.UpdateAsync(user);
+            await context.SaveChangesAsync();
+            if (result.Succeeded)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }    
         }
         [HttpGet("teachers")]
         public async Task<IActionResult> GetTeachers()
