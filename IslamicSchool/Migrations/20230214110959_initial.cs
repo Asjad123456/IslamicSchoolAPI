@@ -258,7 +258,6 @@ namespace IslamicSchool.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClassName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ClassTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     AppUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     BranchId = table.Column<int>(type: "int", nullable: false)
                 },

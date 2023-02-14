@@ -6,7 +6,7 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
     {
         public int Id { get; set; }
         public string ClassName { get; set; }
-        public DateTime ClassTime { get; set; }
+        public TimeOnly ClassTime { get; set; }
         public Guid TeacherId { get; set; }
         public string UserName { get; set; }
         public string FatherName { get; set; }

@@ -16,6 +16,10 @@ builder.Services.ApplicationServices
 builder.Services.JwtServices(builder.Configuration);
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
+});
 builder.Services.AddCors((setup) =>
 {
     setup.AddPolicy("default", (options) =>
