@@ -6,6 +6,7 @@ using IslamicSchool.DataTransferObjects.EditDtos;
 using IslamicSchool.DataTransferObjects.GetDataDtos;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,12 +17,14 @@ namespace IslamicSchool.Controllers
         private readonly IUnitOfWork uow;
         private readonly IMapper mapper;
         private readonly DataContext context;
+        private readonly UserManager<AppUser> userManager;
 
-        public StudyClassController(IUnitOfWork uow, IMapper mapper, DataContext context)
+        public StudyClassController(IUnitOfWork uow, IMapper mapper, DataContext context, UserManager<AppUser> userManager)
         {
             this.uow = uow;
             this.mapper = mapper;
             this.context = context;
+            this.userManager = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> GetStudyClass()
@@ -44,6 +47,10 @@ namespace IslamicSchool.Controllers
         {
             var studyclass = mapper.Map<StudyClass>(addstudyClassDto);
             uow.StudyClassRepository.AddStudyClass(studyclass);
+            var appUser = await userManager.FindByIdAsync(addstudyClassDto.AppUserId.ToString());
+            appUser.BranchId = studyclass.BranchId;
+            appUser.Branch = studyclass.Branch;
+            await userManager.UpdateAsync(appUser);
             await uow.SaveAsync();
             return Ok();
         }

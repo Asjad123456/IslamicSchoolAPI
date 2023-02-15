@@ -51,6 +51,7 @@ namespace IslamicSchool.Controllers
                                                   BranchId = x.Branch.Id,
                                                   BranchName = x.Branch.BranchName,
                                                   Address = x.Branch.Address,
+                                                  StudyClasses = x.StudyClasses
                                               })
                                               .ToListAsync();
             return Ok(user);

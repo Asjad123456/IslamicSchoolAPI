@@ -38,6 +38,7 @@ namespace IslamicSchool.Controllers
         {
             var branches = await context.Branches.Include(b => b.AppUser)
                                                    .Include(b => b.studyClasses)
+                                                   .Include(b => b.Students)
                                                    .Where(x => x.Id == id)
                                                    .ToListAsync();
             var branchDtos = mapper.Map<List<GetBranchDto>>(branches);
