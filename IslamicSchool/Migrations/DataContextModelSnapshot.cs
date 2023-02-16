@@ -112,6 +112,8 @@ namespace IslamicSchool.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BranchId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -150,9 +152,6 @@ namespace IslamicSchool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("AppUserId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<int>("BranchCode")
                         .HasColumnType("int");
 
@@ -165,10 +164,6 @@ namespace IslamicSchool.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId")
-                        .IsUnique()
-                        .HasFilter("[AppUserId] IS NOT NULL");
 
                     b.ToTable("Branches");
                 });
@@ -484,6 +479,15 @@ namespace IslamicSchool.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.Branch", "Branch")
+                        .WithMany("AppUsers")
+                        .HasForeignKey("BranchId");
+
+                    b.Navigation("Branch");
+                });
+
             modelBuilder.Entity("IslamicSchool.Entities.AppUserRole", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.AppRole", "Role")
@@ -501,15 +505,6 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Role");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
-                {
-                    b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
-                        .WithOne("Branch")
-                        .HasForeignKey("IslamicSchool.Entities.Branch", "AppUserId");
-
-                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
@@ -610,8 +605,6 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
-                    b.Navigation("Branch");
-
                     b.Navigation("StudyClasses");
 
                     b.Navigation("UserRoles");
@@ -619,6 +612,8 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
                 {
+                    b.Navigation("AppUsers");
+
                     b.Navigation("Students");
 
                     b.Navigation("studyClasses");

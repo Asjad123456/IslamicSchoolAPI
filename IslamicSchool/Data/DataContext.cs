@@ -42,9 +42,9 @@ namespace IslamicSchool.Data
                 .WithOne(u => u.AppUser)
                 .HasForeignKey(u => u.AppUserId);
             builder.Entity<Branch>()
-                .HasOne(b => b.AppUser)
-                .WithOne(au => au.Branch)
-                .HasForeignKey<Branch>(b => b.AppUserId);
+                .HasMany(b => b.AppUsers)
+                .WithOne(t => t.Branch)
+                .HasForeignKey(t => t.BranchId);
             builder.Entity<Branch>()
                 .HasMany(b => b.studyClasses)
                 .WithOne(t => t.Branch)

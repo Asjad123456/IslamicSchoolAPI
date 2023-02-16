@@ -14,17 +14,11 @@ namespace IslamicSchool.Helpers
             CreateMap<UserForRegistrationDto, AppUser>()
                 .ReverseMap();
             CreateMap<Branch, BranchDto>()
-                .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(src => src.AppUserId));
+                .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(src => src.AppUsers.FirstOrDefault().Id));
             CreateMap<Branch, EditBranchDto>()
                 .ReverseMap();
                 CreateMap<Branch, GetBranchDto>()
-                   .ForMember(dto => dto.BranchAdminId, opt => opt.MapFrom(src => src.AppUserId))
-                   .ForMember(dto => dto.UserName, opt => opt.MapFrom(src => src.AppUser.UserName))
-                   .ForMember(dto => dto.FatherName, opt => opt.MapFrom(src => src.AppUser.FatherName))
-                   .ForMember(dto => dto.Email, opt => opt.MapFrom(src => src.AppUser.Email))
-                   .ForMember(dto => dto.PhoneNumber, opt => opt.MapFrom(src => src.AppUser.PhoneNumber))
-                   .ForMember(dto => dto.StudyClasses, opt => opt.MapFrom(src => src.studyClasses))
-                   .ForMember(dto => dto.Students, opt => opt.MapFrom(src => src.Students))
+                   .ForMember(dto => dto.AppUsers, opt => opt.MapFrom(src => src.AppUsers))
                 .ReverseMap();
             CreateMap<StudyClass, GetClassDto>()
                    .ForMember(dto => dto.TeacherId, opt => opt.MapFrom(src => src.AppUserId))

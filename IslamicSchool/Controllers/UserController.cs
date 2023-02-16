@@ -100,7 +100,7 @@ namespace IslamicSchool.Controllers
 
             foreach (var teacher in filteredTeachers)
             {
-                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUserId == teacher.Id);
+                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUsers.FirstOrDefault().Id == teacher.Id);
                 if (relatedBranch == null)
                 {
                     result.Add(teacher);
@@ -116,7 +116,7 @@ namespace IslamicSchool.Controllers
             List<AppUser> result = new List<AppUser>();
             foreach (var teacher in filteredTeachers)
             {
-                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUserId == teacher.Id);
+                var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUsers.FirstOrDefault().Id == teacher.Id);
                 if (relatedBranch == null)
                 {
                     result.Add(teacher);

@@ -36,14 +36,57 @@ namespace IslamicSchool.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBranchById(int id)
         {
-            var branches = await context.Branches.Include(b => b.AppUser)
+            var branches = await context.Branches.Include(b => b.AppUsers)
+                                                   .ThenInclude(u => u.UserRoles)
+                                                   .ThenInclude(ur => ur.Role)
                                                    .Include(b => b.studyClasses)
                                                    .Include(b => b.Students)
                                                    .Where(x => x.Id == id)
                                                    .ToListAsync();
+
             var branchDtos = mapper.Map<List<GetBranchDto>>(branches);
+            var adminUsers = new List<AppUser>();
+            foreach (var branch in branches)
+            {
+                var admins = branch.AppUsers.Where(u => u.UserRoles.Any(ur => ur.Role.Name == "ADMIN"));
+                adminUsers.AddRange(admins);
+            }
+
+            foreach (var branchDto in branchDtos)
+            {
+                branchDto.AppUsers = adminUsers;
+            }
+
             return Ok(branchDtos);
         }
+
+        [HttpGet("teachers/{id}")]
+        public async Task<IActionResult> GetBranchByIdWithTeachers(int id)
+        {
+            var branches = await context.Branches.Include(b => b.AppUsers)
+                                                   .ThenInclude(u => u.UserRoles)
+                                                   .ThenInclude(ur => ur.Role)
+                                                   .Include(b => b.studyClasses)
+                                                   .Include(b => b.Students)
+                                                   .Where(x => x.Id == id)
+                                                   .ToListAsync();
+
+            var branchDtos = mapper.Map<List<GetBranchDto>>(branches);
+            var adminUsers = new List<AppUser>();
+            foreach (var branch in branches)
+            {
+                var admins = branch.AppUsers.Where(u => u.UserRoles.Any(ur => ur.Role.Name == "TEACHER"));
+                adminUsers.AddRange(admins);
+            }
+
+            foreach (var branchDto in branchDtos)
+            {
+                branchDto.AppUsers = adminUsers;
+            }
+
+            return Ok(branchDtos);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddBranch(BranchDto branchdto)
         {
