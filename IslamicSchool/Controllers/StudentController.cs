@@ -50,6 +50,19 @@ namespace IslamicSchool.Controllers
         public async Task<IActionResult> AddStudent(AddStudentDto studentDto)
         {
             var student = mapper.Map<Student>(studentDto);
+
+            // Create a new guardian object and map its properties from the studentDto
+            var guardian = new Guardian
+            {
+                Name = studentDto.GuardianName,
+                ContactNumber = studentDto.GuardianContactNumber,
+                Address = studentDto.GuardianAddress,
+                FatherName = studentDto.FatherName
+            };
+
+            // Set the Guardian property of the student object to the newly created guardian object
+            student.Guardian = guardian;
+
             uow.StudentRepository.AddStudents(student);
             await uow.SaveAsync();
             return Ok();
@@ -66,7 +79,26 @@ namespace IslamicSchool.Controllers
         {
             var student = await uow.StudentRepository.FindStudent(id);
 
+            // Update the properties of the student object using the studentForUpdate object
             mapper.Map(studentForUpdate, student);
+
+            // Create a new guardian object and map its properties from the studentForUpdate
+            var guardian = new Guardian
+            {
+                Name = studentForUpdate.GuardianName,
+                ContactNumber = studentForUpdate.GuardianContactNumber,
+                Address = studentForUpdate.GuardianAddress
+            };
+
+            // If the GuardianId property is not null, set it to the GuardianId property of the student object
+            if (studentForUpdate.GuardianId.HasValue)
+            {
+                student.GuardianId = studentForUpdate.GuardianId.Value;
+            }
+
+            // Set the Guardian property of the student object to the newly created guardian object
+            student.Guardian = guardian;
+
             await uow.SaveAsync();
             return Ok();
         }

@@ -15,6 +15,10 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public int RollNumber { get; set; }
         public int BranchId { get; set; }
         public int? GuardianId { get; set; }
+        public string? GuardianName { get; set; }
+        public int GuardianContactNumber { get; set; }
+        public string? GuardianAddress { get; set; }
+        public string? GuardianFatherName { get; set; }
         public int StudyClassId { get; set; }
     }
 }
