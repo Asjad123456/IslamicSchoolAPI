@@ -56,6 +56,13 @@ namespace IslamicSchool.Controllers
                                               .ToListAsync();
             return Ok(user);
         }
+        [HttpGet("admin/{id}")]
+        public async Task<IActionResult> GetAdmin(Guid id)
+        {
+            var user = await userManager.Users.Where(x => x.Id == id)
+                                              .ToListAsync();
+            return Ok(user);
+        }
         [HttpPut("{id}")]
         public async Task<IActionResult> AddBranchForUser(Guid id, AddBranchForSupervisorDto addBranchForSupervisorDto)
         {
@@ -134,17 +141,33 @@ namespace IslamicSchool.Controllers
                                            .ToList();
             return Ok(filteredTeachers);
         }
+        [HttpGet("admin")]
+        public async Task<IActionResult> GetAdminById()
+        {
+            var teachers = await userManager.GetUsersInRoleAsync("DEAN");
+            var filteredTeachers = userManager.Users
+                                           .Include(t => t.Branch)
+                                           .Where(t => t.UserRoles.Any(r => r.Role.Name == "ADMIN"))
+                                           .ToList();
+            return Ok(filteredTeachers);
+        }
         [HttpGet("teachers-count")]
         public IActionResult GetTeachersCount()
         {
-            var teachers = userManager.GetUsersInRoleAsync("TEACHER").Result.Count;
+            var teachers = userManager.GetUsersInRoleAsync("TEACHER").Result.Count();
             return Ok(teachers);
         }
         [HttpGet("admins-count")]
         public IActionResult GetAdminsCount()
         {
-            var admins = userManager.GetUsersInRoleAsync("ADMIN").Result.Count;
+            var admins = userManager.GetUsersInRoleAsync("ADMIN").Result.Count();
             return Ok(admins);
+        }
+        [HttpGet("allteachers")]
+        public async Task<IActionResult> GetAllTeachers()
+        {
+            var teachers = await userManager.GetUsersInRoleAsync("TEACHER");
+            return Ok(teachers);
         }
     }
 }

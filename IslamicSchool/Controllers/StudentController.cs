@@ -31,6 +31,12 @@ namespace IslamicSchool.Controllers
             var studentdto = mapper.Map<IEnumerable<GetStudentDto>>(students);
             return Ok(studentdto);
         }
+        [HttpGet("count")]
+        public IActionResult GetBranchesCount()
+        {
+            var students = context.Students.ToListAsync().Result.Count();
+            return Ok(students);
+        }
         [HttpGet("number")]
         public IActionResult GetStudentCount()
         {

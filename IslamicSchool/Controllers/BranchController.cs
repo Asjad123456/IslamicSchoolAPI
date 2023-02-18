@@ -33,6 +33,13 @@ namespace IslamicSchool.Controllers
             var branch = mapper.Map<IEnumerable<GetBranchDto>>(branches);
             return Ok(branch);
         }
+        [HttpGet("count")]
+        public IActionResult GetBranchesCount()
+        {
+
+            var branches =  context.Branches.ToListAsync().Result.Count();
+            return Ok(branches);
+        }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBranchById(int id)
         {
