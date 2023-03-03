@@ -42,6 +42,13 @@ namespace IslamicSchool.Controllers
             var branchDtos = mapper.Map<List<GetClassDto>>(branches);
             return Ok(branchDtos);
         }
+        [HttpGet("studentcount/{id}")]
+        public async Task<IActionResult> GetClassStudentsCount(int id)
+        {
+            var studentsCount = await context.Students
+                                              .CountAsync(s => s.StudyClass.Id == id);
+            return Ok(studentsCount);
+        }
         [HttpPost]
         public async Task<IActionResult> AddClass(AddStudyClassDto addstudyClassDto)
         {
