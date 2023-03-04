@@ -48,9 +48,10 @@ namespace IslamicSchool.Controllers
                                                   FatherName = x.FatherName,
                                                   PhoneNumber = x.PhoneNumber,
                                                   Email = x.Email,
+                                                  Address = x.Address,
                                                   BranchId = x.Branch.Id,
                                                   BranchName = x.Branch.BranchName,
-                                                  Address = x.Branch.Address,
+                                                  BranchAddress = x.Branch.Address,
                                                   StudyClasses = x.StudyClasses
                                               })
                                               .ToListAsync();
@@ -86,6 +87,7 @@ namespace IslamicSchool.Controllers
             user.FatherName = supervisorProfileEditDto.fatherName;
             user.Email = supervisorProfileEditDto.email;
             user.PhoneNumber = supervisorProfileEditDto.phoneNumber;
+            user.Address = supervisorProfileEditDto.Address;
 
             var result = await userManager.UpdateAsync(user);
             await context.SaveChangesAsync();

@@ -27,6 +27,7 @@ namespace IslamicSchool.Helpers
                    .ForMember(dto => dto.Email, opt => opt.MapFrom(src => src.AppUser.Email))
                    .ForMember(dto => dto.PhoneNumber, opt => opt.MapFrom(src => src.AppUser.PhoneNumber))
                    .ForMember(dto => dto.Students, opt => opt.MapFrom(src => src.Students))
+                   .ForMember(dto => dto.Address, opt => opt.MapFrom(src => src.AppUser.Address))
                 .ReverseMap();
             CreateMap<StudyClass, AddStudyClassDto>()
                    .ForMember(dto => dto.AppUserId, opt => opt.MapFrom(src => src.AppUserId))

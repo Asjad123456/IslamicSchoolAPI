@@ -12,6 +12,7 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public string FatherName { get; set; }
         public string Email { get; set; }
         public int PhoneNumber { get; set; }
+        public string Address { get; set; }
         public int BranchId { get; set; }
         public ICollection<Student> Students { get; set; }
     }

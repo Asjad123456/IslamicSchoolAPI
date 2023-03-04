@@ -12,6 +12,7 @@ namespace IslamicSchool.DataTransferObjects
         public string? PhoneNumber { get; set; }
         public int? BranchId { get; set; }
         public string? BranchName { get; set; }
+        public string? BranchAddress { get; set; }
         public ICollection<StudyClass>? StudyClasses { get; set; }
     }
 }
