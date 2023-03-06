@@ -57,6 +57,15 @@ namespace IslamicSchool.Controllers
                                               .ToListAsync();
             return Ok(user);
         }
+        [HttpGet("teacherclasscount/{id}")]
+        public async Task<IActionResult> GetTeacherClassesCount(Guid id)
+        {
+            var user = await userManager.Users.Include(b => b.Branch)
+                                              .Where(x => x.Id == id)
+                                              .Select(x => x.StudyClasses.Count())
+                                              .FirstOrDefaultAsync();
+            return Ok(user);
+        }
         [HttpGet("admin/{id}")]
         public async Task<IActionResult> GetAdmin(Guid id)
         {
@@ -117,6 +126,7 @@ namespace IslamicSchool.Controllers
             }
             return Ok(result);
         }
+
         [HttpGet("admins")]
         public async Task<IActionResult> GetAdmins()
         {
