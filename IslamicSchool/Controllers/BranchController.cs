@@ -76,6 +76,26 @@ namespace IslamicSchool.Controllers
 
             return Ok(studyClassCount);
         }
+        [HttpGet("students/{id}")]
+        public async Task<IActionResult> GetStudentsCount(int id)
+        {
+            var studyClassCount = await context.Branches
+                .Where(x => x.Id == id)
+                .Select(b => b.Students.Count)
+                .SingleOrDefaultAsync();
+
+            return Ok(studyClassCount);
+        }
+        [HttpGet("studentslist/{id}")]
+        public async Task<IActionResult> GetStudents(int id)
+        {
+            var studyClassCount = await context.Branches
+                .Where(x => x.Id == id)
+                .Include(b => b.Students)
+                .ToListAsync();
+
+            return Ok(studyClassCount);
+        }
         [HttpGet("teachercount/{id}")]
         public async Task<IActionResult> GetTeacherCount(int id)
         {
