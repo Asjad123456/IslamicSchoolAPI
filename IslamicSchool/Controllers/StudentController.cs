@@ -93,7 +93,8 @@ namespace IslamicSchool.Controllers
             {
                 Name = studentForUpdate.GuardianName,
                 ContactNumber = studentForUpdate.GuardianContactNumber,
-                Address = studentForUpdate.GuardianAddress
+                Address = studentForUpdate.GuardianAddress,
+                FatherName = studentForUpdate.GuardianFatherName
             };
 
             // If the GuardianId property is not null, set it to the GuardianId property of the student object
