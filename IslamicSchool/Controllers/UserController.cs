@@ -57,6 +57,23 @@ namespace IslamicSchool.Controllers
                                               .ToListAsync();
             return Ok(user);
         }
+        [HttpGet("roles/{id}")]
+        public async Task<IActionResult> GetUserWithRoles(Guid id)
+        {
+                    var user = await userManager.Users
+              .Include(b => b.Branch)
+              .Include(ur => ur.UserRoles)
+                  .ThenInclude(r => r.Role)
+              .Where(x => x.Id == id)
+              .Select(x => new GetuserWithRolesDto
+              {
+                  id = x.Id,
+                  Roles = x.UserRoles.Select(ur => ur.Role.Name).ToList()
+              })
+              .ToListAsync();
+
+                    return Ok(user);
+        }
         [HttpGet("teacherclasscount/{id}")]
         public async Task<IActionResult> GetTeacherClassesCount(Guid id)
         {

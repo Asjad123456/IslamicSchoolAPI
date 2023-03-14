@@ -39,7 +39,7 @@ namespace IslamicSchool.Helpers
                 .ForMember(dto => dto.GuardianId, opt => opt.MapFrom(src => src.GuardianId))
                 .ForMember(dto => dto.GuardianName, opt => opt.MapFrom(src => src.Guardian.Name))
                 .ForMember(dto => dto.GuardianFatherName, opt => opt.MapFrom(src => src.Guardian.FatherName))
-                .ForMember(dto => dto.GuardianContactNumber, opt => opt.MapFrom(src => src.Guardian.ContactNumber))
+                .ForMember(dto => dto.ContactNumber, opt => opt.MapFrom(src => src.Guardian.ContactNumber))
                 .ForMember(dto => dto.GuardianAddress, opt => opt.MapFrom(src => src.Guardian.Address))
                 .ForMember(dto => dto.CNIC, opt => opt.MapFrom(src => src.Guardian.CNIC))
                 .ReverseMap();

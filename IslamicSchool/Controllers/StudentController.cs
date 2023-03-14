@@ -64,7 +64,6 @@ namespace IslamicSchool.Controllers
                 ContactNumber = studentDto.GuardianContactNumber,
                 Address = studentDto.GuardianAddress,
                 FatherName = studentDto.FatherName,
-                PhoneNumber = studentDto.phoneNumber
             };
 
             // Set the Guardian property of the student object to the newly created guardian object
