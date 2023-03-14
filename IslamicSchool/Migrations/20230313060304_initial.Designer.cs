@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230304080754_initial")]
+    [Migration("20230313060304_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -246,6 +246,9 @@ namespace IslamicSchool.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PhoneNumber")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

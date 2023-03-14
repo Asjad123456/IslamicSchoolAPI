@@ -79,7 +79,8 @@ namespace IslamicSchool.Migrations
                     FatherName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ContactNumber = table.Column<int>(type: "int", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CNIC = table.Column<int>(type: "int", nullable: false)
+                    CNIC = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

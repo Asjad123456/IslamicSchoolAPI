@@ -63,7 +63,8 @@ namespace IslamicSchool.Controllers
                 Name = studentDto.GuardianName,
                 ContactNumber = studentDto.GuardianContactNumber,
                 Address = studentDto.GuardianAddress,
-                FatherName = studentDto.FatherName
+                FatherName = studentDto.FatherName,
+                PhoneNumber = studentDto.phoneNumber
             };
 
             // Set the Guardian property of the student object to the newly created guardian object
@@ -85,29 +86,13 @@ namespace IslamicSchool.Controllers
         {
             var student = await uow.StudentRepository.FindStudent(id);
 
-            // Update the properties of the student object using the studentForUpdate object
+            // Update the properties of the Student object using the StudentForUpdateDto object
             mapper.Map(studentForUpdate, student);
-
-            // Create a new guardian object and map its properties from the studentForUpdate
-            var guardian = new Guardian
-            {
-                Name = studentForUpdate.GuardianName,
-                ContactNumber = studentForUpdate.GuardianContactNumber,
-                Address = studentForUpdate.GuardianAddress,
-                FatherName = studentForUpdate.GuardianFatherName
-            };
-
-            // If the GuardianId property is not null, set it to the GuardianId property of the student object
-            if (studentForUpdate.GuardianId.HasValue)
-            {
-                student.GuardianId = studentForUpdate.GuardianId.Value;
-            }
-
-            // Set the Guardian property of the student object to the newly created guardian object
-            student.Guardian = guardian;
 
             await uow.SaveAsync();
             return Ok();
         }
+
+
     }
 }

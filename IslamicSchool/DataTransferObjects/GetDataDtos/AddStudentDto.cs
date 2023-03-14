@@ -19,6 +19,7 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public int GuardianContactNumber { get; set; }
         public string? GuardianAddress { get; set; }
         public string? GuardianFatherName { get; set; }
+        public int phoneNumber { get; set; }
         public int StudyClassId { get; set; }
     }
 }
