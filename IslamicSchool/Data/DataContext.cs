@@ -23,6 +23,7 @@ namespace IslamicSchool.Data
         public DbSet<BranchAdmin> BranchAdmins { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<TeacherTask> TeacherTasks { get; set; }
+        public DbSet<Attendance> Attendances{ get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
