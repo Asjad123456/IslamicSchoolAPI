@@ -65,6 +65,11 @@ namespace IslamicSchool.Helpers
                 .ReverseMap();
             CreateMap<TeacherTasksDto, TeacherTask>()
                 .ReverseMap();
+            CreateMap<Attendance, AddAttendanceDto>()
+                .ForMember(dest => dest.StudentId, opt => opt.MapFrom(src => src.StudentId))
+                .ForMember(dest => dest.StudyClassId, opt => opt.MapFrom(src => src.StudyClassId))
+                .ReverseMap();
+
         }
     }
 }

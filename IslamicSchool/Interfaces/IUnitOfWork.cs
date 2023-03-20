@@ -13,6 +13,7 @@
         ITeacherTaskRepository TeacherTaskRepository { get; }
         IUserRepository UserRepository { get; }
         IDeanRepository DeanRepository { get; }
+        IAttendanceRepository AttendanceRepository { get; }
         Task<bool> SaveAsync();
     }
 }

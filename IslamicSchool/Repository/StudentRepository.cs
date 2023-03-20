@@ -1,4 +1,4 @@
-﻿using IslamicSchool.Data;
+﻿    using IslamicSchool.Data;
 using IslamicSchool.Entities;
 using IslamicSchool.Interfaces;
 using Microsoft.EntityFrameworkCore;

@@ -2,109 +2,58 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using IslamicSchool.Data;
 using IslamicSchool.DataTransferObjects;
 using IslamicSchool.Entities;
+using IslamicSchool.Interfaces;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace IslamicSchool.Controllers
 {
-    [ApiController]
-    [Route("api/class/{classId}/attendance")]
-    public class AttendanceController : ControllerBase
+    public class AttendanceController : BaseController
     {
         private readonly DataContext _context;
+        private readonly IMapper mapper;
+        private readonly IUnitOfWork uow;
 
-        public AttendanceController(DataContext context)
+        public AttendanceController(DataContext context, IMapper mapper, IUnitOfWork uow)
         {
             _context = context;
+            this.mapper = mapper;
+            this.uow = uow;
         }
-
-/*        [HttpGet("{date}")]
-        public async Task<ActionResult<IEnumerable<Attendance>>> GetAttendance(int classId, DateTime date)
-        {
-            var attendance = await _context.Attendances
-*//*                .Include(a => a.Student)*//*
-                .Where(a => a.Student.StudyClassId == classId && a.Date == date)
-                .ToListAsync();
-
-            return attendance;
-        }
-        [HttpGet("attendance")]
-        public async Task<IEnumerable<Attendance>> GetAttendanceForClassAndDate(int studyclassId, DateTime date)
-        {
-            var attendance = await _context.Attendances
-                .Include(a => a.Student)
-                .Where(a => a.StudyClassId == studyclassId && a.Date == date.Date)
-                .ToListAsync();
-
-            return attendance;
-        }*/
-
-        /* [HttpPost("{date}")]
-         public async Task<IActionResult> MarkAttendance(int classId, DateTime date, List<AttendanceDto> attendanceDto)
-         {
-             var attendance = await _context.Attendances
-                 .Include(a => a.Student)
-                 .Where(a => a.Student.StudyClassId == classId && a.Date == date)
-                 .ToListAsync();
-
-             foreach (var item in attendance)
-             {
-                 var dto = attendanceDto.FirstOrDefault(a => a.StudentId == item.StudentId);
-                 if (dto != null)
-                 {
-                     item.IsPresent = dto.IsPresent;
-                 }
-             }
-
-             await _context.SaveChangesAsync();
-
-             return Ok();
-         }*/
-        /*[HttpPost("postattendance")]
-        public async Task<ActionResult> AddAttendanceForClass(int classId, DateTime date, List<Attendance> attendanceData)
-        {
-            // Delete any existing attendance data for this class and date
-            var existingAttendance = await _context.Attendances
-                .Where(a => a.Student.StudyClassId == classId && a.Date == date)
-                .ToListAsync();
-
-            _context.RemoveRange(existingAttendance);
-
-            // Add the new attendance data
-            foreach (var attendance in attendanceData)
-            {
-                attendance.Date = date;
-                attendance.Student = await _context.Students.FindAsync(attendance.StudentId);
-                _context.Attendances.Add(attendance);
-            }
-
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }*/
         [HttpPost("attendance")]
-        public async Task<ActionResult> AddAttendance(int classId, DateTime date, [FromBody] List<int> studentIds, bool isPresent = true)
+        public async Task<ActionResult> AddAttendance(List<AddAttendanceDto> attendanceList)
         {
-            var attendanceList = new List<Attendance>();
-            foreach (var studentId in studentIds)
+            foreach (var attendance in attendanceList)
             {
-                attendanceList.Add(new Attendance
+                var student = await uow.StudentRepository.FindStudent(attendance.StudentId);
+                if (student == null)
                 {
-                    Date = date,
-                    IsPresent = isPresent,
-                    StudentId = studentId,
-                    StudyClassId = classId
-                });
+                    return BadRequest("Invalid student id.");
+                }
+
+                var studyClass = await uow.StudyClassRepository.FindStudyClass(attendance.StudyClassId);
+                if (studyClass == null)
+                {
+                    return BadRequest("Invalid study class id.");
+                }
+
+                var addattendance = mapper.Map<Attendance>(attendance);
+                addattendance.Student = student;
+                addattendance.StudyClass = studyClass;
+
+                uow.AttendanceRepository.AddAttendance(addattendance);
             }
 
-            _context.Attendances.AddRange(attendanceList);
-            await _context.SaveChangesAsync();
+            await uow.SaveAsync();
 
             return Ok();
         }
+
         [HttpGet("attendance")]
         public async Task<ActionResult<List<AttendanceResponse>>> GetAttendance(int classId, DateTime date)
         {
@@ -128,6 +77,7 @@ namespace IslamicSchool.Controllers
             public string StudentName { get; set; }
             public int StudentRollNumber { get; set; }
             public bool IsPresent { get; set; }
+            public DateTime Date { get; set; }
         }
         [HttpGet]
         public async Task<ActionResult<List<AttendanceResponse>>> GetAllAttendance(int classId)
@@ -141,7 +91,8 @@ namespace IslamicSchool.Controllers
             {
                 StudentName = a.Student.Name,
                 StudentRollNumber = a.Student.RollNumber,
-                IsPresent = a.IsPresent
+                IsPresent = a.IsPresent,
+                Date = a.Date
             }).ToList();
 
             return attendanceResponseList;

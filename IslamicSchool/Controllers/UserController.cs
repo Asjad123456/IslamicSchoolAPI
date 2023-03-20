@@ -130,10 +130,10 @@ namespace IslamicSchool.Controllers
         public async Task<IActionResult> GetTeachers()
         {
             var teachers = await userManager.GetUsersInRoleAsync("TEACHER");
-            var filteredTeachers = teachers.Where(t => t.StudyClasses == null);
-            List<AppUser> result = new List<AppUser>();
+/*            var filteredTeachers = teachers.Where(t => t.StudyClasses == null);
+*/            List<AppUser> result = new List<AppUser>();
 
-            foreach (var teacher in filteredTeachers)
+            foreach (var teacher in teachers)
             {
                 var relatedBranch = await context.Branches.FirstOrDefaultAsync(b => b.AppUsers.FirstOrDefault().Id == teacher.Id);
                 if (relatedBranch == null)

@@ -38,6 +38,8 @@ namespace IslamicSchool.UOW
 
         public IDeanRepository DeanRepository => new DeanRepository(userManager);
 
+        public IAttendanceRepository AttendanceRepository => new AttendanceRepository(context);
+
         public async Task<bool> SaveAsync()
         {
             return await context.SaveChangesAsync() > 0;
