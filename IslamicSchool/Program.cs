@@ -1,7 +1,13 @@
 using IslamicSchool.Data;
 using IslamicSchool.Extensions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Server.IISIntegration;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,11 +17,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.ApplicationServices
-    (builder.Configuration);
+builder.Services.ApplicationServices(builder.Configuration);
 builder.Services.JwtServices(builder.Configuration);
 builder.Services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
@@ -27,6 +32,7 @@ builder.Services.AddCors((setup) =>
         options.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
     });
 });
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -45,5 +51,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
 
 app.Run();

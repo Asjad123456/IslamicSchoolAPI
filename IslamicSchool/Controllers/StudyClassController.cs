@@ -69,13 +69,46 @@ namespace IslamicSchool.Controllers
             return Ok(id);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudent(int id, EditClassDto studyClassDto)
+        public async Task<IActionResult> UpdateStudent(int id, EditClassDto studyClassDto, Guid? appUserId)
         {
             var studyclass = await uow.StudyClassRepository.FindStudyClass(id);
+            if(studyclass == null)
+            {
+                return NotFound();
+            }
 
             mapper.Map(studyClassDto, studyclass);
+            if (appUserId.HasValue)
+            {
+                var existingUser = await userManager.FindByIdAsync(studyclass.AppUserId.ToString());
+
+                if(existingUser != null)
+                {
+                    existingUser.StudyClasses.Remove(studyclass);
+                    studyclass.AppUserId = Guid.Empty;
+                    studyclass.AppUser = null;
+
+                    await userManager.UpdateAsync(existingUser);
+
+                }
+
+                var newTeacher = await userManager.FindByIdAsync(appUserId.Value.ToString());
+                if(newTeacher == null)
+                {
+                    return NotFound("Couldnt find user with specifies id");
+                }
+
+                newTeacher.StudyClasses.Add(studyclass);
+                await userManager.UpdateAsync(newTeacher);
+
+                studyclass.AppUserId = newTeacher.Id;
+                studyclass.AppUser = newTeacher;
+
+            }
             await uow.SaveAsync();
-            return Ok();
+
+            var updatedClassDto = mapper.Map<EditClassDto>(studyclass);
+            return Ok(updatedClassDto);
         }
     }
 }

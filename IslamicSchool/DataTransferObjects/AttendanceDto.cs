@@ -2,7 +2,8 @@
 {
     public class AttendanceDto
     {
-        public int StudentId { get; set; }
-        public bool IsPresent { get; set; }
+        public DateTime Date { get; set; }
+        public int StudyClassId { get; set; }
+        public List<AttendanceRecordDto> AttendanceRecords { get; set; }
     }
 }

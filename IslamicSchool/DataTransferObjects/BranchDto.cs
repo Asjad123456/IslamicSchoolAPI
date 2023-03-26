@@ -7,7 +7,5 @@
         public string Address { get; set; }
         public int BranchCode { get; set; }
         public Guid AppUserId { get; set; }
-        /*        public Array BranchAdmin { get; set; }*/
-
     }
 }

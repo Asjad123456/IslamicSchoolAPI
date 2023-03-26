@@ -304,6 +304,26 @@ namespace IslamicSchool.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Attendances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    StudyClassId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Attendances_StudyClasses_StudyClassId",
+                        column: x => x.StudyClassId,
+                        principalTable: "StudyClasses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Students",
                 columns: table => new
                 {
@@ -341,30 +361,55 @@ namespace IslamicSchool.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attendances",
+                name: "AttendanceRecords",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IsPresent = table.Column<bool>(type: "bit", nullable: false),
                     StudentId = table.Column<int>(type: "int", nullable: false),
-                    StudyClassId = table.Column<int>(type: "int", nullable: false)
+                    AttendanceId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attendances", x => x.Id);
+                    table.PrimaryKey("PK_AttendanceRecords", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attendances_Students_StudentId",
+                        name: "FK_AttendanceRecords_Attendances_AttendanceId",
+                        column: x => x.AttendanceId,
+                        principalTable: "Attendances",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_AttendanceRecords_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudentAttendances",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AttendanceId = table.Column<int>(type: "int", nullable: false),
+                    StudentId = table.Column<int>(type: "int", nullable: false),
+                    IsPresent = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudentAttendances", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Attendances_StudyClasses_StudyClassId",
-                        column: x => x.StudyClassId,
-                        principalTable: "StudyClasses",
-                        principalColumn: "Id");
+                        name: "FK_StudentAttendances_Attendances_AttendanceId",
+                        column: x => x.AttendanceId,
+                        principalTable: "Attendances",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_StudentAttendances_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -412,14 +457,29 @@ namespace IslamicSchool.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Attendances_StudentId",
-                table: "Attendances",
+                name: "IX_AttendanceRecords_AttendanceId",
+                table: "AttendanceRecords",
+                column: "AttendanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AttendanceRecords_StudentId",
+                table: "AttendanceRecords",
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Attendances_StudyClassId",
                 table: "Attendances",
                 column: "StudyClassId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentAttendances_AttendanceId",
+                table: "StudentAttendances",
+                column: "AttendanceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudentAttendances_StudentId",
+                table: "StudentAttendances",
+                column: "StudentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_BranchId",
@@ -470,7 +530,7 @@ namespace IslamicSchool.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Attendances");
+                name: "AttendanceRecords");
 
             migrationBuilder.DropTable(
                 name: "BranchAdmins");
@@ -482,6 +542,9 @@ namespace IslamicSchool.Migrations
                 name: "Questions");
 
             migrationBuilder.DropTable(
+                name: "StudentAttendances");
+
+            migrationBuilder.DropTable(
                 name: "Teachers");
 
             migrationBuilder.DropTable(
@@ -489,6 +552,9 @@ namespace IslamicSchool.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Attendances");
 
             migrationBuilder.DropTable(
                 name: "Students");

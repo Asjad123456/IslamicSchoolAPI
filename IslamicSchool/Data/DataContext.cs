@@ -23,7 +23,9 @@ namespace IslamicSchool.Data
         public DbSet<BranchAdmin> BranchAdmins { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<TeacherTask> TeacherTasks { get; set; }
-        public DbSet<Attendance> Attendances{ get; set; }
+        public DbSet<Attendance> Attendances { get; set; }
+        public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
+        public DbSet<StudentAttendance> StudentAttendances { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -58,6 +60,25 @@ namespace IslamicSchool.Data
                 .HasMany(b => b.Students)
                 .WithOne(s => s.StudyClass)
                 .HasForeignKey(s => s.StudyClassId);
+            builder.Entity<Attendance>()
+                .HasMany(a => a.AttendanceRecords)
+                .WithOne();
+            builder.Entity<Attendance>()
+                .HasOne(a => a.StudyClass)
+                .WithMany()
+                .HasForeignKey(a => a.StudyClassId);
+            builder.Entity<AttendanceRecord>()
+                .HasOne(ar => ar.Student)
+                .WithMany()
+                .HasForeignKey(ar => ar.StudentId);
+
+            //Unique identifires
+            builder.Entity<Student>()
+                .HasIndex(s => new { s.RegNumber, s.RollNumber})
+                .IsUnique();
+            builder.Entity<AppUser>()
+                .HasIndex(s => new { s.Email})
+                .IsUnique();
         }
     }
 }

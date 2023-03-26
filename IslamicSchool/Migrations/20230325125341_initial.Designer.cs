@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IslamicSchool.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230315080853_initial")]
+    [Migration("20230325125341_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -156,22 +156,40 @@ namespace IslamicSchool.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("StudyClassId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyClassId");
+
+                    b.ToTable("Attendances");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.AttendanceRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AttendanceId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudyClassId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AttendanceId");
 
                     b.HasIndex("StudentId");
 
-                    b.HasIndex("StudyClassId");
-
-                    b.ToTable("Attendances");
+                    b.ToTable("AttendanceRecords");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>
@@ -343,6 +361,32 @@ namespace IslamicSchool.Migrations
                     b.HasIndex("StudyClassId");
 
                     b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.StudentAttendance", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AttendanceId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsPresent")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttendanceId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("StudentAttendances");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
@@ -543,21 +587,28 @@ namespace IslamicSchool.Migrations
 
             modelBuilder.Entity("IslamicSchool.Entities.Attendance", b =>
                 {
-                    b.HasOne("IslamicSchool.Entities.Student", "Student")
-                        .WithMany()
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("IslamicSchool.Entities.StudyClass", "StudyClass")
                         .WithMany()
                         .HasForeignKey("StudyClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Student");
-
                     b.Navigation("StudyClass");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.AttendanceRecord", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.Attendance", null)
+                        .WithMany("AttendanceRecords")
+                        .HasForeignKey("AttendanceId");
+
+                    b.HasOne("IslamicSchool.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Student", b =>
@@ -583,6 +634,25 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Guardian");
 
                     b.Navigation("StudyClass");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.StudentAttendance", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.Attendance", "Attendance")
+                        .WithMany()
+                        .HasForeignKey("AttendanceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IslamicSchool.Entities.Student", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Attendance");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
@@ -661,6 +731,11 @@ namespace IslamicSchool.Migrations
                     b.Navigation("StudyClasses");
 
                     b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.Attendance", b =>
+                {
+                    b.Navigation("AttendanceRecords");
                 });
 
             modelBuilder.Entity("IslamicSchool.Entities.Branch", b =>

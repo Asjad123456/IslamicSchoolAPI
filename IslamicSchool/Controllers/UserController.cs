@@ -9,6 +9,7 @@ using IslamicSchool.Helpers;
 using IslamicSchool.Interfaces;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
@@ -197,6 +198,23 @@ namespace IslamicSchool.Controllers
         {
             var teachers = await userManager.GetUsersInRoleAsync("TEACHER");
             return Ok(teachers);
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await userManager.DeleteAsync(user);
+            if (result.Succeeded)
+            {
+                return NoContent();
+            }
+
+            return BadRequest(result.Errors);
         }
     }
 }

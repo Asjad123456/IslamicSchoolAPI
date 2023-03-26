@@ -159,13 +159,65 @@ namespace IslamicSchool.Controllers
             return Ok(id);
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBranch(int id, EditBranchDto branchDto)
+        public async Task<IActionResult> UpdateBranch(int id, EditBranchDto branchDto, Guid? adminUserId)
         {
             var branch = await uow.BranchRepository.FindBranch(id);
 
+            if (branch == null)
+            {
+                return NotFound();
+            }
+
+            // Update the branch data
             mapper.Map(branchDto, branch);
+
+            // Update the admin user if a new admin user ID is provided
+            if (adminUserId.HasValue)
+            {
+                // find the existing admin user associated with this branch
+                var existingAdminUser = await userManager.Users
+                    .Include(u => u.UserRoles)
+                    .ThenInclude(ur => ur.Role)
+                    .Where(u => u.BranchId == id && u.UserRoles.Any(ur => ur.Role.Name == "ADMIN"))
+                    .FirstOrDefaultAsync();
+
+                if (existingAdminUser != null)
+                {
+                    // remove the existing admin user from the branch's collection of app users
+                    branch.AppUsers.Remove(existingAdminUser);
+
+                    // clear the existing adm   in user's branch reference
+                    existingAdminUser.Branch = null;
+                    existingAdminUser.BranchId = null;
+
+                    // update the existing admin user in the database
+                    await userManager.UpdateAsync(existingAdminUser);
+                }
+
+                // find the new admin user associated with this branch
+                var newAdminUser = await userManager.FindByIdAsync(adminUserId.Value.ToString());
+                if (newAdminUser == null)
+                {
+                    return NotFound("Could not find user with the specified ID.");
+                }
+
+                // update the new admin user's branch information
+                newAdminUser.BranchId = branch.Id;
+                newAdminUser.Branch = branch;
+                await userManager.UpdateAsync(newAdminUser);
+
+                // add the new admin user to the branch's collection of app users
+                branch.AppUsers.Add(newAdminUser);
+            }
+
+            // save changes to the database
             await uow.SaveAsync();
-            return Ok();
+
+            // return the updated branch DTO
+            var updatedBranchDto = mapper.Map<BranchDto>(branch);
+            return Ok(updatedBranchDto);
         }
+
+
     }
 }

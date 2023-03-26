@@ -1,9 +1,11 @@
-﻿namespace IslamicSchool.Entities
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace IslamicSchool.Entities
 {
     public class Student
     {
         public int id { get; set; }
-        public int? RegNumber { get; set; }
+        public int RegNumber { get; set; }
         public string Name { get; set; }
         public string? FatherName { get; set; }
         public int? ContactNumber { get; set; }
