@@ -7,5 +7,6 @@
         public string Address { get; set; }
         public int BranchCode { get; set; }
         public Guid AppUserId { get; set; }
+        public int SchoolId { get; set; }
     }
 }

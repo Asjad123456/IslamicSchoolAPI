@@ -13,6 +13,7 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public string? Address { get; set; }
         [Required]
         public int RollNumber { get; set; }
+        public int SchoolId { get; set; }
         public int BranchId { get; set; }
         public int? GuardianId { get; set; }
         public string? GuardianName { get; set; }
@@ -20,6 +21,11 @@ namespace IslamicSchool.DataTransferObjects.GetDataDtos
         public string? GuardianAddress { get; set; }
         public string? GuardianFatherName { get; set; }
         public int phoneNumber { get; set; }
+        public int StudentEducationId { get; set; }
+        public string? CurrentStudyLevel { get; set; }
+        public int MarksInMatric { get; set; }
+        public int MarksInIntermedicate { get; set; }
+        public string Remarks { get; set; }
         public int StudyClassId { get; set; }
     }
 }

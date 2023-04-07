@@ -5,6 +5,8 @@
         public string ClassName { get; set; }
         public TimeOnly ClassTime { get; set; }
         public Guid AppUserId { get; set; }
+        public string ClassSubject { get; set; }
         public int BranchId { get; set; }
+        public int SchoolId { get;set; }
     }
 }

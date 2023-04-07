@@ -13,8 +13,11 @@ namespace IslamicSchool.Helpers
         {
             CreateMap<UserForRegistrationDto, AppUser>()
                 .ReverseMap();
-            CreateMap<Branch, BranchDto>()
+            CreateMap<School, SchoolDto>()
                 .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(src => src.AppUsers.FirstOrDefault().Id));
+            CreateMap<Branch, BranchDto>()
+                .ForMember(dest => dest.AppUserId, opt => opt.MapFrom(src => src.AppUsers.FirstOrDefault().Id))
+                .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => src.SchoolId));
             CreateMap<Branch, EditBranchDto>()
                 .ReverseMap();
                 CreateMap<Branch, GetBranchDto>()
@@ -32,6 +35,7 @@ namespace IslamicSchool.Helpers
             CreateMap<StudyClass, AddStudyClassDto>()
                    .ForMember(dto => dto.AppUserId, opt => opt.MapFrom(src => src.AppUserId))
                    .ForMember(dto => dto.BranchId, opt => opt.MapFrom(src => src.BranchId))
+                   .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => src.SchoolId))
                 .ReverseMap();
             CreateMap<StudyClass, EditClassDto>()
                  .ReverseMap();
@@ -42,6 +46,11 @@ namespace IslamicSchool.Helpers
                 .ForMember(dto => dto.ContactNumber, opt => opt.MapFrom(src => src.Guardian.ContactNumber))
                 .ForMember(dto => dto.GuardianAddress, opt => opt.MapFrom(src => src.Guardian.Address))
                 .ForMember(dto => dto.CNIC, opt => opt.MapFrom(src => src.Guardian.CNIC))
+                .ForMember(dto => dto.StudentEducationId, opt => opt.MapFrom(src => src.StudentEducationId))
+                .ForMember(dto => dto.CurrentStudyLevel, opt => opt.MapFrom(src => src.StudentEducation.CurrentStudyLevel))
+                .ForMember(dto => dto.MarksInMatric, opt => opt.MapFrom(src => src.StudentEducation.MarksInMatric))
+                .ForMember(dto => dto.MarksInIntermedicate, opt => opt.MapFrom(src => src.StudentEducation.MarksInIntermedicate))
+                .ForMember(dto => dto.Remarks, opt => opt.MapFrom(src => src.StudentEducation.Remarks))
                 .ReverseMap();
             CreateMap<Student, StudentForUpdateDto>().ReverseMap();
             CreateMap<Guardian, GuardianDto>().ReverseMap();
@@ -50,10 +59,13 @@ namespace IslamicSchool.Helpers
                 .ForMember(dest => dest.BranchId, opt => opt.MapFrom(src => src.BranchId));
             CreateMap<Student, StudentDto>()
                 .ForMember(dest => dest.Guardian, opt => opt.MapFrom(src => src.GuardianId))
+                .ForMember(dto => dto.StudentEducation, opt => opt.MapFrom(src => src.StudentEducationId))
                 .ReverseMap();
             CreateMap<Student, AddStudentDto>()
                 .ForMember(dest => dest.GuardianId, opt => opt.MapFrom(src => src.GuardianId))
+                .ForMember(dto => dto.StudentEducationId, opt => opt.MapFrom(src => src.StudentEducationId))
                 .ForMember(dest => dest.StudyClassId, opt => opt.MapFrom(src => src.StudyClassId))
+                .ForMember(dest => dest.SchoolId, opt => opt.MapFrom(src => src.SchoolId))
                .ReverseMap();
             CreateMap<Course, CourseDto>().ReverseMap();
             CreateMap<StudyClassDto, StudyClass>()
@@ -65,6 +77,8 @@ namespace IslamicSchool.Helpers
                 .ReverseMap();
             CreateMap<TeacherTasksDto, TeacherTask>()                    
                 .ReverseMap();
+            CreateMap<AdminTaskDto, AdminTasks>()
+                .ReverseMap();
             CreateMap<AttendanceRecord, AttendanceRecordDto>()
                 .ReverseMap();
             CreateMap<Attendance, AttendanceDto>()
@@ -72,6 +86,8 @@ namespace IslamicSchool.Helpers
                 .ForMember(dest => dest.AttendanceRecords, opt => opt.MapFrom(src => src.AttendanceRecords))
                 .ReverseMap();
             CreateMap<StudentAttendanceDto, StudentAttendance>()
+                .ReverseMap();
+            CreateMap<StudentEducationDto, StudentEducation>()
                 .ReverseMap();
             /*            CreateMap<Attendance, AddAttendanceDto>()
                             .ForMember(dest => dest.StudentId, opt => opt.MapFrom(src => src.StudentId))

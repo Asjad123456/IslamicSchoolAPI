@@ -8,6 +8,8 @@ namespace IslamicSchool.Entities
         public override string UserName { get; set; }
         public string? FatherName { get; set; }
         public string? Address { get; set; }
+        public int? SchoolId { get; set; }
+        public School? School { get; set; }
         public int? BranchId { get; set; } 
         public Branch? Branch { get; set; }
         public ICollection<StudyClass> StudyClasses { get; set; }

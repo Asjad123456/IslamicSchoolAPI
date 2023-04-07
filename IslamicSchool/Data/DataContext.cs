@@ -23,9 +23,12 @@ namespace IslamicSchool.Data
         public DbSet<BranchAdmin> BranchAdmins { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<TeacherTask> TeacherTasks { get; set; }
+        public DbSet<AdminTasks> AdminTasks { get; set; }
         public DbSet<Attendance> Attendances { get; set; }
         public DbSet<AttendanceRecord> AttendanceRecords { get; set; }
         public DbSet<StudentAttendance> StudentAttendances { get; set; }
+        public DbSet<StudentEducation> StudentEducations { get; set; }
+        public DbSet<School> Schools { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -71,7 +74,26 @@ namespace IslamicSchool.Data
                 .HasOne(ar => ar.Student)
                 .WithMany()
                 .HasForeignKey(ar => ar.StudentId);
-
+            builder.Entity<School>()
+                .HasMany(ur => ur.Branches)
+                .WithOne(u => u.School)
+                .HasForeignKey(u => u.SchoolId)
+                .IsRequired();
+            builder.Entity<School>()
+                .HasMany(ur => ur.AppUsers)
+                .WithOne(u => u.School)
+                .HasForeignKey(u => u.SchoolId)
+                .IsRequired();
+            builder.Entity<School>()
+                .HasMany(ur => ur.StudyClasses)
+                .WithOne(u => u.School)
+                .HasForeignKey(u => u.SchoolId)
+                .IsRequired();
+            builder.Entity<School>()
+                .HasMany(ur => ur.Students)
+                .WithOne(u => u.School)
+                .HasForeignKey(u => u.SchoolId)
+                .IsRequired();
             //Unique identifires
             builder.Entity<Student>()
                 .HasIndex(s => new { s.RegNumber, s.RollNumber})

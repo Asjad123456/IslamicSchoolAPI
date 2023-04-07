@@ -27,7 +27,12 @@ namespace IslamicSchool.Extensions
         {
             webBuilder.UseIISIntegration();
         });
-
+        public static void ConfigureIISIntegration(this IServiceCollection services)
+        {
+            services.Configure<IISOptions>(options =>
+            {
+            });
+        }
         public static void ApplicationServices(this IServiceCollection services, IConfiguration config)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();

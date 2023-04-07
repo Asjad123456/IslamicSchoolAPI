@@ -15,5 +15,10 @@
         public int GuardianContactNumber { get; set; }
         public string GuardianAddress { get; set; }
         public int CNIC { get; set; }
+        public int StudentEducationId { get; set; }
+        public string CurrentStudyLevel { get; set; }
+        public int MarksInMatric { get; set; }
+        public int MarksInIntermedicate { get; set; }
+        public string Remarks { get; set; }
     }
 }

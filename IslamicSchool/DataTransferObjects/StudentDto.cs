@@ -10,5 +10,6 @@
         public string? Address { get; set; }
         public int? RollNumber { get; set; }
         public string? Guardian { get; set; }
+        public string? StudentEducation { get; set; }
     }
 }

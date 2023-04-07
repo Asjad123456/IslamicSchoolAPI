@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Server.IISIntegration;
@@ -21,6 +22,7 @@ builder.Services.ApplicationServices(builder.Configuration);
 builder.Services.JwtServices(builder.Configuration);
 builder.Services.AddControllers().AddJsonOptions(x =>
     x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+builder.Services.ConfigureIISIntegration();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new TimeOnlyConverter());
@@ -41,8 +43,27 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.Use(async (context, next) =>
+    {
+        await next();
+        if (context.Response.StatusCode == 404 && !Path.HasExtension(context.Request.Path.Value))
+        {
+            context.Request.Path = "/index.html"; await next();
+        }
+    });
+    app.UseHsts();
+}
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.All
+});
 
 app.UseCors("default");
 

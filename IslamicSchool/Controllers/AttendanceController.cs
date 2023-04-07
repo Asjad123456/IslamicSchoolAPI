@@ -151,7 +151,7 @@ namespace IslamicSchool.Controllers
              return Ok(attendance.Records);
          }*/
         [HttpPost("{classId}/{date}")]
-        public IActionResult AddAttendance(int classId, DateTime date, [FromBody] AttendanceRecordDto[] attendanceRecordsDto)
+        public IActionResult AddAttendance(int classId, DateTime date, [FromBody] StudentAttendanceDto[] attendanceRecordsDto)
         {
             var attendanceRecords = new List<AttendanceRecord>();
             foreach (var attendanceRecordDto in attendanceRecordsDto)
@@ -183,6 +183,7 @@ namespace IslamicSchool.Controllers
                     {
                         AttendanceId = attendance.Id,
                         StudentId = student.id,
+                       
                         IsPresent = attendanceRecord.IsPresent
                     };
                                                                                                                     
@@ -227,6 +228,42 @@ namespace IslamicSchool.Controllers
 
             return Ok(attendanceDto);
         }
+        [HttpGet("{classId}")]
+        public IActionResult GetAttendanceByClass(int classId)
+        {
+            // Retrieve attendance records for the specified class
+            var attendances = _context.Attendances
+                .Include(a => a.AttendanceRecords)
+                .ThenInclude(ar => ar.Student)
+                .Where(a => a.StudyClassId == classId)
+                .ToList();
+
+            if (attendances == null || attendances.Count == 0)
+            {
+                return NotFound();
+            }
+
+            // Map attendance records to DTOs
+            var attendanceDtos = attendances.Select(attendance => new AttendanceDto
+            {
+                Date = attendance.Date,
+                StudyClassId = attendance.StudyClassId,
+                AttendanceRecords = attendance.AttendanceRecords
+                        .Select(ar => new AttendanceRecordDto
+                        {
+
+                            StudentId = ar.StudentId,
+                            StudentName = ar.Student.Name,
+                            RollNumber = ar.Student.RollNumber,
+                            IsPresent = ar.IsPresent
+                        })
+                        .ToList()
+            })
+                .ToList();
+
+            return Ok(attendanceDtos);
+        }
+
 
     }
 

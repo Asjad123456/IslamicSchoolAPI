@@ -47,6 +47,7 @@ namespace IslamicSchool.Controllers
         public async Task<IActionResult> GetStudentsById(int id)
         {
             var students = await context.Students.Include(b => b.Guardian)
+                                                 .Include(b => b.StudentEducation)
                                                    .Where(x => x.id == id)
                                                    .ToListAsync();
             var studentDtos = mapper.Map<List<GetStudentDto>>(students);
@@ -68,6 +69,14 @@ namespace IslamicSchool.Controllers
 
             // Set the Guardian property of the student object to the newly created guardian object
             student.Guardian = guardian;
+            var studentEducation = new StudentEducation
+            {
+                CurrentStudyLevel = studentDto.CurrentStudyLevel,
+                MarksInMatric = studentDto.MarksInMatric,
+                MarksInIntermedicate = studentDto.MarksInIntermedicate,
+                Remarks = studentDto.Remarks
+            };
+            student.StudentEducation = studentEducation;
 
             uow.StudentRepository.AddStudents(student);
             await uow.SaveAsync();

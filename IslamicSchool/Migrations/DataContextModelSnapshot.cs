@@ -22,6 +22,28 @@ namespace IslamicSchool.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
+            modelBuilder.Entity("IslamicSchool.Entities.AdminTasks", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Task")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("AdminTasks");
+                });
+
             modelBuilder.Entity("IslamicSchool.Entities.AppRole", b =>
                 {
                     b.Property<Guid>("Id")
@@ -116,6 +138,10 @@ namespace IslamicSchool.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasFilter("[Email] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -341,10 +367,13 @@ namespace IslamicSchool.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RegNumber")
+                    b.Property<int>("RegNumber")
                         .HasColumnType("int");
 
                     b.Property<int>("RollNumber")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentEducationId")
                         .HasColumnType("int");
 
                     b.Property<int>("StudyClassId")
@@ -356,7 +385,12 @@ namespace IslamicSchool.Migrations
 
                     b.HasIndex("GuardianId");
 
+                    b.HasIndex("StudentEducationId");
+
                     b.HasIndex("StudyClassId");
+
+                    b.HasIndex("RegNumber", "RollNumber")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });
@@ -387,6 +421,33 @@ namespace IslamicSchool.Migrations
                     b.ToTable("StudentAttendances");
                 });
 
+            modelBuilder.Entity("IslamicSchool.Entities.StudentEducation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CurrentStudyLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MarksInIntermedicate")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MarksInMatric")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("StudentEducations");
+                });
+
             modelBuilder.Entity("IslamicSchool.Entities.StudyClass", b =>
                 {
                     b.Property<int>("Id")
@@ -402,6 +463,10 @@ namespace IslamicSchool.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClassName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClassSubject")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -458,11 +523,16 @@ namespace IslamicSchool.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Task")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("TeacherTasks");
                 });
@@ -555,6 +625,17 @@ namespace IslamicSchool.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("IslamicSchool.Entities.AdminTasks", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
             modelBuilder.Entity("IslamicSchool.Entities.AppUser", b =>
                 {
                     b.HasOne("IslamicSchool.Entities.Branch", "Branch")
@@ -621,6 +702,12 @@ namespace IslamicSchool.Migrations
                         .WithMany()
                         .HasForeignKey("GuardianId");
 
+                    b.HasOne("IslamicSchool.Entities.StudentEducation", "StudentEducation")
+                        .WithMany()
+                        .HasForeignKey("StudentEducationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("IslamicSchool.Entities.StudyClass", "StudyClass")
                         .WithMany("Students")
                         .HasForeignKey("StudyClassId")
@@ -630,6 +717,8 @@ namespace IslamicSchool.Migrations
                     b.Navigation("Branch");
 
                     b.Navigation("Guardian");
+
+                    b.Navigation("StudentEducation");
 
                     b.Navigation("StudyClass");
                 });
@@ -681,6 +770,17 @@ namespace IslamicSchool.Migrations
                         .IsRequired();
 
                     b.Navigation("Branch");
+                });
+
+            modelBuilder.Entity("IslamicSchool.Entities.TeacherTask", b =>
+                {
+                    b.HasOne("IslamicSchool.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

@@ -16,12 +16,13 @@ namespace IslamicSchool.Controllers
             this.uow = uow;
             this.mapper = mapper;
         }
-        [HttpGet]
-        public async Task<IEnumerable<TeacherTasksDto>> GetTeacherTasks()
+        [HttpGet("{appUserId}")]
+        public async Task<IEnumerable<TeacherTasksDto>> GetTeacherTasks(Guid appUserId)
         {
             var teacherTasks = await uow.TeacherTaskRepository.GetTeachersTaksAsync();
-            var teachertaskdto = mapper.Map<IEnumerable<TeacherTasksDto>>(teacherTasks);
-            return (teachertaskdto);
+            var filteredTasks = teacherTasks.Where(t => t.AppUserId == appUserId);
+            var teachertaskdto = mapper.Map<IEnumerable<TeacherTasksDto>>(filteredTasks);
+            return teachertaskdto;
         }
         [HttpPost]
         public async Task<IActionResult> AddTask(TeacherTasksDto teacherTasksDto)
@@ -32,7 +33,7 @@ namespace IslamicSchool.Controllers
             return Ok();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
             uow.TeacherTaskRepository.DeleteTeacherTasks(id);
             await uow.SaveAsync();

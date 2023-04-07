@@ -40,6 +40,12 @@ namespace IslamicSchool.UOW
 
         public IAttendanceRepository AttendanceRepository => new AttendanceRepository(context);
 
+        public IStudentEducationRepository StudentEducationRepository => new StudentEducationRepository(context);
+
+        public IAdminTaskRepository AdminTaskRepository => new AdminTaskRespository(context);
+
+        public ISchoolRepository SchoolRepository => new SchoolRepository(context);
+
         public async Task<bool> SaveAsync()
         {
             return await context.SaveChangesAsync() > 0;

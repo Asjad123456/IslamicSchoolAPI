@@ -34,6 +34,7 @@ namespace IslamicSchool.Repository
         {
             var students = await context.Students
                 .Include(p => p.Guardian)
+                .Include(p => p.StudentEducation)
                 .ToListAsync();
             return students;
         }

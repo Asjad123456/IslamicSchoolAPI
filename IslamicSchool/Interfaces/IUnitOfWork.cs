@@ -14,6 +14,9 @@
         IUserRepository UserRepository { get; }
         IDeanRepository DeanRepository { get; }
         IAttendanceRepository AttendanceRepository { get; }
+        IStudentEducationRepository StudentEducationRepository { get; }
+        IAdminTaskRepository AdminTaskRepository { get; }
+        ISchoolRepository SchoolRepository { get; }
         Task<bool> SaveAsync();
     }
 }

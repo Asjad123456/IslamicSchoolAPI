@@ -66,6 +66,21 @@ namespace IslamicSchool.Controllers
 
             return Ok(branchDtos);
         }
+        [HttpGet("branchstudents/{id}")]
+        public async Task<IActionResult> GetBranchStudents(int id)
+        {
+            var branch = await context.Branches
+                .Include(b => b.Students)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (branch == null)
+            {
+                return NotFound();
+            }
+
+            var branchDto = mapper.Map<GetBranchDto>(branch);
+            return Ok(branchDto);
+        }
         [HttpGet("studyclasscount/{id}")]
         public async Task<IActionResult> GetStudyClassCount(int id)
         {
@@ -106,15 +121,15 @@ namespace IslamicSchool.Controllers
             return Ok(teacherCount);
         }
         [HttpGet("teachers/{id}")]
-        public async Task<IActionResult> GetBranchByIdWithTeachers(int id)
+        public async Task<IActionResult> GetBranchByIdWithTeachers()
         {
             var branches = await context.Branches.Include(b => b.AppUsers)
                                                    .ThenInclude(u => u.UserRoles)
                                                    .ThenInclude(ur => ur.Role)
                                                    .Include(b => b.studyClasses)
                                                    .Include(b => b.Students)
-                                                   .Where(x => x.Id == id)
-                                                   .ToListAsync();
+/*                                                   .Where(x => x.Id == id)
+*/                                                   .ToListAsync();
 
             var branchDtos = mapper.Map<List<GetBranchDto>>(branches);
             var adminUsers = new List<AppUser>();
